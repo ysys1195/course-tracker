@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ResourceType {
+  DOCS
+  GITHUB
+  VIDEO
+  BOOK
+  ARTICLE
+  TUTORIAL
+}
+
+model LearningResource {
+  id        String       @id @default(cuid())
+  title     String
+  url       String       @unique
+  type      ResourceType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}

@@ -7,9 +7,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f db",
+    "db:check": "docker compose exec db pg_isready -U ${POSTGRES_USER:-course_tracker} -d ${POSTGRES_DB:-course_tracker}",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push"
   },
   "dependencies": {
+    "@prisma/client": "^6.6.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
@@ -22,6 +29,7 @@
     "eslint": "^9.0.0",
     "eslint-config-next": "latest",
     "postcss": "^8.4.49",
+    "prisma": "^6.6.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.0.0"
   }
