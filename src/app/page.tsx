@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
+import { appNavigationItems } from "@/lib/navigation";
 
 const resourceTypes = [
   "公式 Docs",
@@ -48,10 +49,10 @@ export default async function Home() {
                     {session?.user ? "ダッシュボードへ" : "ログインして始める"}
                   </Link>
                   <Link
-                    href="/dashboard"
+                    href={session?.user ? "/resources" : "/login"}
                     className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/15"
                   >
-                    保護ページを確認する
+                    {session?.user ? "教材一覧へ" : "認証後の画面を見る"}
                   </Link>
                 </div>
               </div>
@@ -97,6 +98,37 @@ export default async function Home() {
               </p>
             </article>
           ))}
+        </section>
+
+        <section className="rounded-[2rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm text-signal">Navigation</p>
+              <h2 className="mt-3 text-2xl font-semibold">主要画面への導線</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/70">
+                ダッシュボード、教材一覧、ロードマップ、設定を共通ナビゲーションから移動できる構成にしています。
+              </p>
+            </div>
+            <Link
+              href={session?.user ? "/dashboard" : "/login"}
+              className="inline-flex items-center justify-center rounded-full border border-ink/12 px-5 py-3 text-sm font-medium text-ink transition hover:bg-ink/5"
+            >
+              {session?.user ? "ナビゲーションを開く" : "ログインして確認する"}
+            </Link>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {appNavigationItems.map((item) => (
+              <article
+                key={item.href}
+                className="rounded-[1.5rem] border border-ink/10 bg-mist p-5"
+              >
+                <p className="text-sm text-signal">{item.shortLabel}</p>
+                <h3 className="mt-3 text-lg font-semibold">{item.label}</h3>
+                <p className="mt-2 text-sm leading-7 text-ink/68">{item.description}</p>
+              </article>
+            ))}
+          </div>
         </section>
       </div>
     </main>
