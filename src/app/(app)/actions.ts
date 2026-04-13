@@ -2,7 +2,7 @@
 
 import { signOut } from "@/auth";
 
-export async function signOutFromDashboard() {
+export async function signOutFromApp() {
   await signOut({
     redirectTo: "/",
   });
