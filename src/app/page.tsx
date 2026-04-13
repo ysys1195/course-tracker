@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { auth } from "@/auth";
+
 const resourceTypes = [
   "公式 Docs",
   "公式 GitHub",
@@ -13,7 +16,9 @@ const highlights = [
   "次にやることを見失わない",
 ];
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
     <main className="min-h-screen bg-mist px-6 py-10 text-ink sm:px-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-10">
@@ -35,10 +40,36 @@ export default function Home() {
                   技術学習に使う公式 Docs、公式 GitHub、動画、書籍、記事をまとめて整理する、
                   公開用ポートフォリオ向けの学習ダッシュボードです。
                 </p>
+                <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+                  <Link
+                    href={session?.user ? "/dashboard" : "/login"}
+                    className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-medium text-ink transition hover:bg-white/90"
+                  >
+                    {session?.user ? "ダッシュボードへ" : "ログインして始める"}
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/15"
+                  >
+                    保護ページを確認する
+                  </Link>
+                </div>
               </div>
             </div>
             <div className="grid gap-3 rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur">
-              <p className="text-sm text-white/72">管理できる教材カテゴリ</p>
+              <p className="text-sm text-white/72">
+                {session?.user ? "現在はログイン済みです" : "管理できる教材カテゴリ"}
+              </p>
+              {session?.user ? (
+                <div className="rounded-[1rem] border border-white/15 bg-white/10 p-4 text-sm text-white/88">
+                  <p className="font-medium">
+                    {session.user.name || "ログイン中のユーザー"}
+                  </p>
+                  <p className="mt-2 text-white/72">
+                    {session.user.email || "メールアドレス未設定"}
+                  </p>
+                </div>
+              ) : null}
               <ul className="grid grid-cols-2 gap-2 text-sm">
                 {resourceTypes.map((type) => (
                   <li
