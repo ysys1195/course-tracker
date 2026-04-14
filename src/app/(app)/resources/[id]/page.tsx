@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
 import { ResourceBadges } from '@/components/resource-badges';
+import { ResourceStatusForm } from '@/components/resource-status-form';
 import { getResourceDetailForUser } from '@/lib/resource-data';
 import { formatUpdatedAt, resourceTypeLabels } from '@/lib/resources';
 
@@ -103,6 +104,19 @@ export default async function ResourceDetailPage({
               priority={resource.priority}
               showStatusPrefix
             />
+          </div>
+
+          <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-white p-4">
+            <p className="text-sm font-medium text-ink">ステータス更新</p>
+            <p className="mt-2 text-sm leading-7 text-ink/68">
+              未着手、学習中、完了、復習中、保留をここから切り替えられます。
+            </p>
+            <div className="mt-4">
+              <ResourceStatusForm
+                resourceId={resource.id}
+                status={resource.status}
+              />
+            </div>
           </div>
 
           <div className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">

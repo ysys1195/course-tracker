@@ -3,6 +3,7 @@ import type {
   LearningResourceStatus,
   ResourceType,
 } from '@prisma/client';
+import { z } from 'zod';
 
 export const resourceTypeOptions: ReadonlyArray<{
   value: ResourceType;
@@ -61,6 +62,23 @@ export const resourceStatusOptions: ReadonlyArray<{
   { value: 'REVIEWING', label: '復習中' },
   { value: 'ON_HOLD', label: '保留' },
 ];
+
+export const resourceStatusValues = resourceStatusOptions.map(
+  (option) => option.value,
+) as [LearningResourceStatus, ...LearningResourceStatus[]];
+
+export const resourceStatusOnlySchema = z.object({
+  status: z.enum(resourceStatusValues, {
+    error: 'ステータスを選択してください。',
+  }),
+});
+
+export type StatusUpdateState = {
+  message?: string;
+  type?: 'success' | 'error';
+};
+
+export const initialStatusUpdateState: StatusUpdateState = {};
 
 export const resourcePriorityMeta: Record<
   LearningResourcePriority,
