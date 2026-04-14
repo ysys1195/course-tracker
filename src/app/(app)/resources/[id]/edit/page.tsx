@@ -2,7 +2,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
-import { getResourceDetailForUser } from '@/lib/resource-data';
+import { ResourceForm } from '@/components/resource-form';
+import { createResourceFormState } from '@/lib/resource-form';
+import { getResourceFormResourceForUser } from '@/lib/resource-data';
+import { deleteResource, updateResource } from './actions';
 
 type EditResourcePageProps = Readonly<{
   params: Promise<{
@@ -20,7 +23,7 @@ export default async function EditResourcePage({
   }
 
   const { id } = await params;
-  const resource = await getResourceDetailForUser(session.user.id, id);
+  const resource = await getResourceFormResourceForUser(session.user.id, id);
 
   if (!resource) {
     notFound();
@@ -31,7 +34,7 @@ export default async function EditResourcePage({
       <PageHeader
         eyebrow="EDIT RESOURCE"
         title={`${resource.title} を見直す`}
-        description="教材編集機能は後続 issue で追加します。この画面は詳細画面から編集導線が切れないようにするためのプレースホルダーです。"
+        description="教材の基本情報、ステータス、優先度を更新できます。削除は画面下部の確認セクションから実行します。"
         actions={
           <Link
             href={`/resources/${resource.id}`}
@@ -42,13 +45,61 @@ export default async function EditResourcePage({
         }
       />
 
-      <section className="rounded-[1.75rem] border border-dashed border-ink/20 bg-white/80 p-8 shadow-soft">
-        <p className="text-sm tracking-[0.18em] text-signal">COMING SOON</p>
-        <h3 className="mt-4 text-2xl font-semibold">編集フォームは次の issue で実装します</h3>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/70">
-          この教材の基本情報、ステータス、優先度を編集できる画面を後続で追加します。今は詳細確認と編集導線の成立を優先しています。
-        </p>
-      </section>
+      <ResourceForm
+        action={updateResource.bind(null, resource.id)}
+        initialState={createResourceFormState({
+          title: resource.title,
+          url: resource.url,
+          provider: resource.provider,
+          description: resource.description || '',
+          type: resource.type,
+          status: resource.status,
+          priority: resource.priority,
+        })}
+        submitLabel="変更を保存する"
+        afterForm={
+          <section className="rounded-[1.5rem] border border-rose-200 bg-rose-50/70 p-5">
+            <p className="text-sm tracking-[0.18em] text-rose-700">
+              DANGER ZONE
+            </p>
+            <h3 className="mt-3 text-lg font-semibold text-ink">
+              教材を削除する
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-ink/72">
+              この操作は取り消せません。削除すると教材の基本情報、紐づくメモ、学習ログ、関連ロードマップ項目もまとめて削除されます。
+            </p>
+
+            <details className="mt-5 rounded-[1.25rem] border border-rose-200 bg-white p-4">
+              <summary className="cursor-pointer text-sm font-medium text-rose-700">
+                削除確認を開く
+              </summary>
+
+              <form
+                action={deleteResource.bind(null, resource.id)}
+                className="mt-4 grid gap-4"
+              >
+                <label className="flex items-start gap-3 text-sm text-ink/72">
+                  <input
+                    type="checkbox"
+                    required
+                    className="mt-1 h-4 w-4 rounded border-ink/20 text-rose-700 focus:ring-rose-600"
+                  />
+                  <span>
+                    この教材を削除し、元に戻せないことを確認しました。
+                  </span>
+                </label>
+
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-full bg-rose-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-rose-800 sm:w-fit"
+                >
+                  教材を削除する
+                </button>
+              </form>
+            </details>
+          </section>
+        }
+      />
     </div>
   );
 }

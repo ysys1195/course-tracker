@@ -61,12 +61,27 @@ export const resourceDetailSelect = {
   },
 } satisfies Prisma.LearningResourceSelect;
 
+export const resourceFormSelect = {
+  id: true,
+  title: true,
+  url: true,
+  provider: true,
+  description: true,
+  type: true,
+  status: true,
+  priority: true,
+} satisfies Prisma.LearningResourceSelect;
+
 export type ResourceListItem = Prisma.LearningResourceGetPayload<{
   select: typeof resourceListSelect;
 }>;
 
 export type ResourceDetail = Prisma.LearningResourceGetPayload<{
   select: typeof resourceDetailSelect;
+}>;
+
+export type ResourceFormResource = Prisma.LearningResourceGetPayload<{
+  select: typeof resourceFormSelect;
 }>;
 
 export async function getResourcesForUser(userId: string) {
@@ -88,5 +103,18 @@ export async function getResourceDetailForUser(userId: string, id: string) {
       userId,
     },
     select: resourceDetailSelect,
+  });
+}
+
+export async function getResourceFormResourceForUser(
+  userId: string,
+  id: string
+) {
+  return prisma.learningResource.findFirst({
+    where: {
+      id,
+      userId,
+    },
+    select: resourceFormSelect,
   });
 }
