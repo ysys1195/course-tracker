@@ -16,6 +16,20 @@ enum ResourceType {
   TUTORIAL
 }
 
+enum LearningResourceStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  REVIEWING
+  ON_HOLD
+}
+
+enum LearningResourcePriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 enum StudyLogType {
   START
   PROGRESS
@@ -30,14 +44,16 @@ enum LearningPathStatus {
 }
 
 model LearningResource {
-  id                String             @id @default(cuid())
+  id                String                   @id @default(cuid())
   userId            String
   title             String
   url               String
   type              ResourceType
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status            LearningResourceStatus   @default(NOT_STARTED)
+  priority          LearningResourcePriority @default(MEDIUM)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  user              User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   resourceTags      ResourceTag[]
   notes             Note[]
   studyLogs         StudyLog[]
