@@ -16,25 +16,52 @@ enum ResourceType {
   TUTORIAL
 }
 
+enum StudyLogType {
+  START
+  PROGRESS
+  COMPLETE
+  REVIEW
+}
+
+enum LearningPathStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+}
+
 model LearningResource {
-  id        String       @id @default(cuid())
-  title     String
-  url       String       @unique
-  type      ResourceType
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id                String             @id @default(cuid())
+  userId            String
+  title             String
+  url               String
+  type              ResourceType
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceTags      ResourceTag[]
+  notes             Note[]
+  studyLogs         StudyLog[]
+  learningPathItems LearningPathItem[]
+
+  @@unique([userId, url])
+  @@index([userId, type])
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String             @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?            @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  resources     LearningResource[]
+  tags          Tag[]
+  notes         Note[]
+  studyLogs     StudyLog[]
+  learningPaths LearningPath[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
 }
 
 model Account {
@@ -74,4 +101,89 @@ model VerificationToken {
 
   @@id([identifier, token])
   @@unique([token])
+}
+
+model Tag {
+  id           String        @id @default(cuid())
+  userId       String
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceTags ResourceTag[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model ResourceTag {
+  resourceId String
+  tagId      String
+  createdAt  DateTime         @default(now())
+  resource   LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  tag        Tag              @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([resourceId, tagId])
+  @@index([tagId])
+}
+
+model Note {
+  id         String           @id @default(cuid())
+  userId     String
+  resourceId String
+  title      String?
+  content    String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource   LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([resourceId, createdAt])
+}
+
+model StudyLog {
+  id         String           @id @default(cuid())
+  userId     String
+  resourceId String
+  type       StudyLogType
+  content    String
+  studiedAt  DateTime         @default(now())
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource   LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, studiedAt])
+  @@index([resourceId, studiedAt])
+}
+
+model LearningPath {
+  id          String             @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  status      LearningPathStatus @default(PLANNED)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       LearningPathItem[]
+
+  @@index([userId, status])
+}
+
+model LearningPathItem {
+  id             String           @id @default(cuid())
+  learningPathId String
+  resourceId     String
+  position       Int
+  note           String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  learningPath   LearningPath     @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  resource       LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@unique([learningPathId, position])
+  @@unique([learningPathId, resourceId])
+  @@index([resourceId])
 }
