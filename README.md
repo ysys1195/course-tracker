@@ -117,6 +117,137 @@ pnpm prisma:migrate
 - `prisma/schema.prisma`: Prisma スキーマ
 - `docker-compose.yml`: ローカル PostgreSQL の起動設定
 
+## ER図
+
+現時点の MVP スキーマをもとにした論理 ER 図です。
+
+```mermaid
+erDiagram
+    User ||--o{ Account : has
+    User ||--o{ Session : has
+    User ||--o{ LearningResource : owns
+    User ||--o{ Tag : owns
+    User ||--o{ Note : writes
+    User ||--o{ StudyLog : records
+    User ||--o{ LearningPath : creates
+
+    LearningResource ||--o{ ResourceTag : tagged
+    Tag ||--o{ ResourceTag : connects
+    LearningResource ||--o{ Note : has
+    LearningResource ||--o{ StudyLog : has
+    LearningResource ||--o{ LearningPathItem : included_in
+
+    LearningPath ||--o{ LearningPathItem : has
+
+    User {
+      string id PK
+      string name
+      string email UK
+      datetime emailVerified
+      string image
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    Account {
+      string provider PK
+      string providerAccountId PK
+      string userId FK
+      string type
+      string access_token
+      string refresh_token
+      int expires_at
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    Session {
+      string sessionToken PK
+      string userId FK
+      datetime expires
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    VerificationToken {
+      string identifier PK
+      string token PK
+      datetime expires
+    }
+
+    LearningResource {
+      string id PK
+      string userId FK
+      string title
+      string url
+      ResourceType type
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    Tag {
+      string id PK
+      string userId FK
+      string name
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    ResourceTag {
+      string resourceId PK, FK
+      string tagId PK, FK
+      datetime createdAt
+    }
+
+    Note {
+      string id PK
+      string userId FK
+      string resourceId FK
+      string title
+      string content
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    StudyLog {
+      string id PK
+      string userId FK
+      string resourceId FK
+      StudyLogType type
+      string content
+      datetime studiedAt
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    LearningPath {
+      string id PK
+      string userId FK
+      string title
+      string description
+      LearningPathStatus status
+      datetime createdAt
+      datetime updatedAt
+    }
+
+    LearningPathItem {
+      string id PK
+      string learningPathId FK
+      string resourceId FK
+      int position
+      string note
+      datetime createdAt
+      datetime updatedAt
+    }
+```
+
+補足:
+
+- `LearningResource` は中心モデルで、教材 URL はユーザー単位で一意です。
+- `Tag` はユーザー単位で管理し、`ResourceTag` で教材と多対多に紐づきます。
+- `Note` と `StudyLog` は MVP では `LearningResource` に紐づく設計です。
+- `LearningPathItem` は `LearningResource` を必須参照し、ロードマップと教材一覧を一貫して扱います。
+
 ## 今後追加予定の機能
 
 - 教材一覧への実データ表示
