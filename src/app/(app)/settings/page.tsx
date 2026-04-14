@@ -1,3 +1,5 @@
+import { PageHeader } from '@/components/page-header';
+
 const settingsSections = [
   "アカウント表示",
   "ナビゲーション確認",
@@ -7,13 +9,11 @@ const settingsSections = [
 export default function SettingsPage() {
   return (
     <div className="grid gap-4">
-      <section className="rounded-[2rem] border border-ink/10 bg-white p-8 shadow-soft sm:p-10">
-        <p className="text-sm tracking-[0.2em] text-signal">SETTINGS</p>
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight">設定</h2>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/70">
-          アカウント情報や表示まわりの設定を置くための画面です。認証済みレイアウトから安定して辿れることをまず担保します。
-        </p>
-      </section>
+      <PageHeader
+        eyebrow="SETTINGS"
+        title="設定"
+        description="アカウント情報や表示まわりの設定を置くための画面です。認証済みレイアウトから安定して辿れることをまず担保します。"
+      />
 
       <section className="grid gap-4 md:grid-cols-3">
         {settingsSections.map((section) => (

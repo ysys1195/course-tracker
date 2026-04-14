@@ -1,4 +1,5 @@
-import { auth } from "@/auth";
+import { auth } from '@/auth';
+import { PageHeader } from '@/components/page-header';
 
 const overviewCards = [
   {
@@ -20,15 +21,12 @@ export default async function DashboardPage() {
 
   return (
     <div className="grid gap-4">
-      <section className="rounded-[2rem] bg-[linear-gradient(135deg,_#122023_0%,_#18333a_58%,_#0f766e_100%)] p-8 text-white shadow-soft sm:p-10">
-        <p className="text-sm tracking-[0.2em] text-white/70">DASHBOARD</p>
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-          {session?.user?.name || "ユーザー"}の学習ワークスペース
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-white/78 sm:text-base">
-          認証済みユーザー向けの共通レイアウト上に、主要画面への導線を集約しました。次の教材管理機能を追加するための土台です。
-        </p>
-      </section>
+      <PageHeader
+        eyebrow="DASHBOARD"
+        title={`${session?.user?.name || 'ユーザー'}の学習ワークスペース`}
+        description="認証済みユーザー向けの共通レイアウト上に、主要画面への導線を集約しました。次の教材管理機能を追加するための土台です。"
+        variant="hero"
+      />
 
       <section className="grid gap-4 md:grid-cols-3">
         {overviewCards.map((card, index) => (
