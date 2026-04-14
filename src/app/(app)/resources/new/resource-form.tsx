@@ -15,7 +15,6 @@ import {
 
 type FieldProps = {
   label: string;
-  name: string;
   error?: string;
   required?: boolean;
   className?: string;
@@ -24,7 +23,6 @@ type FieldProps = {
 
 function Field({
   label,
-  name,
   error,
   required = false,
   className,
@@ -54,7 +52,6 @@ export function ResourceForm() {
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="タイトル"
-            name="title"
             required
             error={state.errors.title}
           >
@@ -69,7 +66,6 @@ export function ResourceForm() {
 
           <Field
             label="提供元"
-            name="provider"
             required
             error={state.errors.provider}
           >
@@ -84,7 +80,6 @@ export function ResourceForm() {
 
           <Field
             label="URL"
-            name="url"
             required
             error={state.errors.url}
             className="sm:col-span-2"
@@ -101,7 +96,6 @@ export function ResourceForm() {
 
           <Field
             label="説明"
-            name="description"
             error={state.errors.description}
             className="sm:col-span-2"
           >
@@ -119,7 +113,7 @@ export function ResourceForm() {
 
       <section className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
         <div className="grid gap-5 sm:grid-cols-3">
-          <Field label="教材種別" name="type" required error={state.errors.type}>
+          <Field label="教材種別" required error={state.errors.type}>
             <select
               name="type"
               defaultValue={state.fields.type}
@@ -136,7 +130,6 @@ export function ResourceForm() {
 
           <Field
             label="ステータス"
-            name="status"
             required
             error={state.errors.status}
           >
@@ -156,7 +149,6 @@ export function ResourceForm() {
 
           <Field
             label="優先度"
-            name="priority"
             required
             error={state.errors.priority}
           >

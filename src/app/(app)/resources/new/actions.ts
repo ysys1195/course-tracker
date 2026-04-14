@@ -12,14 +12,11 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import {
   createResourceSchema,
+  getCreateResourceFieldErrors,
+  getCreateResourceFormFields,
   initialCreateResourceFormState,
   type CreateResourceFormState,
 } from '@/lib/resource-form';
-
-function getString(formData: FormData, key: string) {
-  const value = formData.get(key);
-  return typeof value === 'string' ? value : '';
-}
 
 export async function createResource(
   _prevState: CreateResourceFormState,
@@ -36,37 +33,21 @@ export async function createResource(
     };
   }
 
-  const fields = {
-    title: getString(formData, 'title'),
-    url: getString(formData, 'url'),
-    provider: getString(formData, 'provider'),
-    description: getString(formData, 'description'),
-    type: getString(formData, 'type'),
-    status: getString(formData, 'status'),
-    priority: getString(formData, 'priority'),
-  };
+  const fields = getCreateResourceFormFields(formData);
 
   const parsed = createResourceSchema.safeParse(fields);
 
   if (!parsed.success) {
-    const flattened = parsed.error.flatten().fieldErrors;
-
     return {
       fields: {
         ...initialCreateResourceFormState.fields,
         ...fields,
       },
-      errors: {
-        title: flattened.title?.[0],
-        url: flattened.url?.[0],
-        provider: flattened.provider?.[0],
-        description: flattened.description?.[0],
-        type: flattened.type?.[0],
-        status: flattened.status?.[0],
-        priority: flattened.priority?.[0],
-      },
+      errors: getCreateResourceFieldErrors(parsed.error),
     };
   }
+
+  let resourceId: string;
 
   try {
     const resource = await prisma.learningResource.create({
@@ -84,9 +65,7 @@ export async function createResource(
         id: true,
       },
     });
-
-    revalidatePath('/resources');
-    redirect(`/resources/${resource.id}`);
+    resourceId = resource.id;
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -107,4 +86,7 @@ export async function createResource(
       },
     };
   }
+
+  revalidatePath('/resources');
+  redirect(`/resources/${resourceId}`);
 }
