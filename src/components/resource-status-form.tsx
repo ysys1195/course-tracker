@@ -24,14 +24,37 @@ export function ResourceStatusForm({
     updateResourceStatus.bind(null, resourceId),
     initialStatusUpdateState,
   );
+  const fieldLayoutClassName = compact
+    ? 'flex flex-col gap-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center'
+    : 'grid gap-3';
+  const selectClassName = compact
+    ? 'min-w-0 rounded-full border border-ink/12 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-signal'
+    : 'rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal';
+  const buttonClassName = compact
+    ? 'inline-flex items-center justify-center rounded-full border border-ink/12 bg-white px-4 py-2.5 text-sm font-medium text-ink transition hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-60'
+    : 'inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-3 text-sm font-medium text-ink transition hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-60';
 
   return (
-    <form action={formAction} className="grid gap-3">
-      <div className={compact ? 'flex flex-col gap-2 sm:flex-row' : 'grid gap-3'}>
+    <form
+      action={formAction}
+      className={
+        compact ? 'grid gap-3 rounded-[1.25rem] bg-mist/55 p-4' : 'grid gap-3'
+      }
+    >
+      {compact ? (
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-medium text-ink">学習ステータス</p>
+          <p className="text-sm leading-6 text-ink/68">
+            一覧からそのまま更新できます。
+          </p>
+        </div>
+      ) : null}
+
+      <div className={fieldLayoutClassName}>
         <select
           name="status"
           defaultValue={status}
-          className="rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal"
+          className={selectClassName}
           aria-label="学習ステータス"
         >
           {resourceStatusOptions.map((option) => (
@@ -40,11 +63,7 @@ export function ResourceStatusForm({
             </option>
           ))}
         </select>
-        <button
-          type="submit"
-          disabled={pending}
-          className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-3 text-sm font-medium text-ink transition hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <button type="submit" disabled={pending} className={buttonClassName}>
           {pending ? '更新中...' : compact ? '更新' : 'ステータスを更新'}
         </button>
       </div>

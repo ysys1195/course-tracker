@@ -33,17 +33,16 @@ export function ResourceCard({ resource }: ResourceCardProps) {
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <ResourceBadges
-          status={resource.status}
-          priority={resource.priority}
-        />
+        <ResourceBadges status={resource.status} priority={resource.priority} />
       </div>
 
-      <ResourceStatusForm
-        resourceId={resource.id}
-        status={resource.status}
-        compact
-      />
+      <div className="mt-5">
+        <ResourceStatusForm
+          resourceId={resource.id}
+          status={resource.status}
+          compact
+        />
+      </div>
 
       <div className="mt-6 flex flex-col gap-3 border-t border-ink/8 pt-4 text-sm text-ink/62 sm:flex-row sm:items-center sm:justify-between">
         <p>更新日: {formatUpdatedAt(resource.updatedAt)}</p>
