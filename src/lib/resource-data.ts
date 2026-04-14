@@ -21,6 +21,44 @@ export const resourceDetailSelect = {
   status: true,
   priority: true,
   updatedAt: true,
+  notes: {
+    orderBy: {
+      updatedAt: 'desc',
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      updatedAt: true,
+    },
+  },
+  studyLogs: {
+    orderBy: {
+      studiedAt: 'desc',
+    },
+    select: {
+      id: true,
+      type: true,
+      content: true,
+      studiedAt: true,
+    },
+  },
+  learningPathItems: {
+    orderBy: {
+      position: 'asc',
+    },
+    select: {
+      id: true,
+      position: true,
+      learningPath: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
+        },
+      },
+    },
+  },
 } satisfies Prisma.LearningResourceSelect;
 
 export type ResourceListItem = Prisma.LearningResourceGetPayload<{
