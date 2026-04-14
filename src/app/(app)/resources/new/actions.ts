@@ -17,6 +17,7 @@ import {
   resourceFormSchema,
   type ResourceFormState,
 } from '@/lib/resource-form';
+import { normalizeTagNames, replaceResourceTags } from '@/lib/resource-tags';
 
 export async function createResource(
   _prevState: ResourceFormState,
@@ -32,6 +33,8 @@ export async function createResource(
       },
     };
   }
+
+  const userId = session.user.id;
 
   const fields = getResourceFormFields(formData);
 
@@ -50,20 +53,27 @@ export async function createResource(
   let resourceId: string;
 
   try {
-    const resource = await prisma.learningResource.create({
-      data: {
-        userId: session.user.id,
-        title: parsed.data.title,
-        url: parsed.data.url,
-        provider: parsed.data.provider,
-        description: parsed.data.description || null,
-        type: parsed.data.type as ResourceType,
-        status: parsed.data.status as LearningResourceStatus,
-        priority: parsed.data.priority as LearningResourcePriority,
-      },
-      select: {
-        id: true,
-      },
+    const tagNames = normalizeTagNames(fields.tags);
+    const resource = await prisma.$transaction(async (tx) => {
+      const createdResource = await tx.learningResource.create({
+        data: {
+          userId,
+          title: parsed.data.title,
+          url: parsed.data.url,
+          provider: parsed.data.provider,
+          description: parsed.data.description || null,
+          type: parsed.data.type as ResourceType,
+          status: parsed.data.status as LearningResourceStatus,
+          priority: parsed.data.priority as LearningResourcePriority,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      await replaceResourceTags(tx, userId, createdResource.id, tagNames);
+
+      return createdResource;
     });
     resourceId = resource.id;
   } catch (error) {
@@ -72,7 +82,10 @@ export async function createResource(
       error.code === 'P2002'
     ) {
       return {
-        fields: parsed.data,
+        fields: {
+          ...parsed.data,
+          tags: fields.tags,
+        },
         errors: {
           url: 'このURLはすでに登録されています。',
         },
@@ -80,7 +93,10 @@ export async function createResource(
     }
 
     return {
-      fields: parsed.data,
+      fields: {
+        ...parsed.data,
+        tags: fields.tags,
+      },
       errors: {
         form: '教材の保存に失敗しました。時間をおいて再度お試しください。',
       },

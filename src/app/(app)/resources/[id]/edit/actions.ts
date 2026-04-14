@@ -17,6 +17,7 @@ import {
   resourceFormSchema,
   type ResourceFormState,
 } from '@/lib/resource-form';
+import { normalizeTagNames, replaceResourceTags } from '@/lib/resource-tags';
 
 function getEditResourceInitialState(formData: FormData) {
   return createResourceFormState(getResourceFormFields(formData));
@@ -38,6 +39,8 @@ export async function updateResource(
     };
   }
 
+  const userId = session.user.id;
+
   const fields = getResourceFormFields(formData);
   const parsed = resourceFormSchema.safeParse(fields);
 
@@ -51,20 +54,31 @@ export async function updateResource(
   }
 
   try {
-    const result = await prisma.learningResource.updateMany({
-      where: {
-        id: resourceId,
-        userId: session.user.id,
-      },
-      data: {
-        title: parsed.data.title,
-        url: parsed.data.url,
-        provider: parsed.data.provider,
-        description: parsed.data.description || null,
-        type: parsed.data.type as ResourceType,
-        status: parsed.data.status as LearningResourceStatus,
-        priority: parsed.data.priority as LearningResourcePriority,
-      },
+    const tagNames = normalizeTagNames(fields.tags);
+    const result = await prisma.$transaction(async (tx) => {
+      const updated = await tx.learningResource.updateMany({
+        where: {
+          id: resourceId,
+          userId,
+        },
+        data: {
+          title: parsed.data.title,
+          url: parsed.data.url,
+          provider: parsed.data.provider,
+          description: parsed.data.description || null,
+          type: parsed.data.type as ResourceType,
+          status: parsed.data.status as LearningResourceStatus,
+          priority: parsed.data.priority as LearningResourcePriority,
+        },
+      });
+
+      if (updated.count === 0) {
+        return updated;
+      }
+
+      await replaceResourceTags(tx, userId, resourceId, tagNames);
+
+      return updated;
     });
 
     if (result.count === 0) {
@@ -81,7 +95,10 @@ export async function updateResource(
       error.code === 'P2002'
     ) {
       return {
-        ...getEditResourceInitialState(formData),
+        fields: {
+          ...parsed.data,
+          tags: fields.tags,
+        },
         errors: {
           url: 'このURLはすでに登録されています。',
         },
@@ -108,10 +125,12 @@ export async function deleteResource(resourceId: string) {
     redirect('/login?callbackUrl=/resources');
   }
 
+  const userId = session.user.id;
+
   await prisma.learningResource.deleteMany({
     where: {
       id: resourceId,
-      userId: session.user.id,
+      userId,
     },
   });
 

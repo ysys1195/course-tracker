@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { useActionState } from 'react';
 import type { ResourceFormState } from '@/lib/resource-form';
+import { normalizeTagNames } from '@/lib/resource-tags';
 import {
   resourcePriorityOptions,
   resourceStatusOptions,
@@ -18,6 +19,7 @@ type ResourceFormProps = {
   action: ResourceFormAction;
   initialState: ResourceFormState;
   submitLabel: string;
+  tagSuggestions?: string[];
   afterForm?: ReactNode;
 };
 
@@ -52,12 +54,14 @@ export function ResourceForm({
   action,
   initialState,
   submitLabel,
+  tagSuggestions = [],
   afterForm,
 }: ResourceFormProps) {
   const [state, formAction, pending] = useActionState<
     ResourceFormState,
     FormData
   >(action, initialState);
+  const currentTags = normalizeTagNames(state.fields.tags);
 
   return (
     <div className="grid gap-6">
@@ -113,6 +117,50 @@ export function ResourceForm({
                 className="rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal"
                 placeholder="教材の概要や、何を学ぶために使うかを書きます。"
               />
+            </Field>
+
+            <Field label="タグ" className="sm:col-span-2">
+              <div className="grid gap-3">
+                <input
+                  name="tags"
+                  defaultValue={state.fields.tags}
+                  className="rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal"
+                  placeholder="例: React, Next.js, Prisma"
+                />
+
+                {currentTags.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {currentTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex rounded-full border border-signal/20 bg-signal/10 px-3 py-1 text-sm text-signal"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+
+                <p className="text-sm leading-6 text-ink/62">
+                  カンマ区切りで入力します。新しいタグは保存時に自動で作成されます。
+                </p>
+
+                {tagSuggestions.length > 0 ? (
+                  <div className="grid gap-2">
+                    <p className="text-sm font-medium text-ink/70">既存タグ</p>
+                    <div className="flex flex-wrap gap-2">
+                      {tagSuggestions.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex rounded-full border border-ink/10 bg-mist px-3 py-1 text-sm text-ink/68"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             </Field>
           </div>
         </section>

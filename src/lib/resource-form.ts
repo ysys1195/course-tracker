@@ -47,6 +47,7 @@ export type ResourceFormFields = {
   url: string;
   provider: string;
   description: string;
+  tags: string;
   type: string;
   status: string;
   priority: string;
@@ -63,6 +64,7 @@ export const initialResourceFormState: ResourceFormState = {
     url: '',
     provider: '',
     description: '',
+    tags: '',
     type: 'DOCS',
     status: 'NOT_STARTED',
     priority: 'MEDIUM',
@@ -88,6 +90,7 @@ export function getResourceFormFields(formData: FormData): ResourceFormFields {
     url: getString(formData, 'url'),
     provider: getString(formData, 'provider'),
     description: getString(formData, 'description'),
+    tags: getString(formData, 'tags'),
     type: getString(formData, 'type'),
     status: getString(formData, 'status'),
     priority: getString(formData, 'priority'),

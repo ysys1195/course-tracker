@@ -4,8 +4,15 @@ import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
 import { ResourceForm } from '@/components/resource-form';
 import { createResourceFormState } from '@/lib/resource-form';
-import { getResourceFormResourceForUser } from '@/lib/resource-data';
+import {
+  getAvailableTagsForUser,
+  getResourceFormResourceForUser,
+} from '@/lib/resource-data';
 import { deleteResource, updateResource } from './actions';
+import {
+  getTagNamesFromResourceTags,
+  stringifyTagNames,
+} from '@/lib/resource-tags';
 
 type EditResourcePageProps = Readonly<{
   params: Promise<{
@@ -24,6 +31,7 @@ export default async function EditResourcePage({
 
   const { id } = await params;
   const resource = await getResourceFormResourceForUser(session.user.id, id);
+  const tagSuggestions = await getAvailableTagsForUser(session.user.id);
 
   if (!resource) {
     notFound();
@@ -52,11 +60,15 @@ export default async function EditResourcePage({
           url: resource.url,
           provider: resource.provider,
           description: resource.description || '',
+          tags: stringifyTagNames(
+            getTagNamesFromResourceTags(resource.resourceTags)
+          ),
           type: resource.type,
           status: resource.status,
           priority: resource.priority,
         })}
         submitLabel="変更を保存する"
+        tagSuggestions={tagSuggestions}
         afterForm={
           <section className="rounded-[1.5rem] border border-rose-200 bg-rose-50/70 p-5">
             <p className="text-sm tracking-[0.18em] text-rose-700">

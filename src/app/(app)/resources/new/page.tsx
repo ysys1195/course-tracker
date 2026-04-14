@@ -1,8 +1,19 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
+import { getAvailableTagsForUser } from '@/lib/resource-data';
 import { ResourceForm } from './resource-form';
 
-export default function NewResourcePage() {
+export default async function NewResourcePage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    notFound();
+  }
+
+  const tagSuggestions = await getAvailableTagsForUser(session.user.id);
+
   return (
     <div className="grid gap-4">
       <PageHeader
@@ -19,7 +30,7 @@ export default function NewResourcePage() {
         }
       />
 
-      <ResourceForm />
+      <ResourceForm tagSuggestions={tagSuggestions} />
     </div>
   );
 }
