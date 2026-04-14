@@ -38,9 +38,11 @@ export const createResourceSchema = z.object({
   ),
 });
 
-export type CreateResourceInput = z.infer<typeof createResourceSchema>;
+export const resourceFormSchema = createResourceSchema;
 
-export type CreateResourceFormFields = {
+export type ResourceFormInput = z.infer<typeof resourceFormSchema>;
+
+export type ResourceFormFields = {
   title: string;
   url: string;
   provider: string;
@@ -50,12 +52,12 @@ export type CreateResourceFormFields = {
   priority: string;
 };
 
-export type CreateResourceFormState = {
-  fields: CreateResourceFormFields;
-  errors: Partial<Record<keyof CreateResourceInput | 'form', string>>;
+export type ResourceFormState = {
+  fields: ResourceFormFields;
+  errors: Partial<Record<keyof ResourceFormInput | 'form', string>>;
 };
 
-export const initialCreateResourceFormState: CreateResourceFormState = {
+export const initialResourceFormState: ResourceFormState = {
   fields: {
     title: '',
     url: '',
@@ -68,7 +70,19 @@ export const initialCreateResourceFormState: CreateResourceFormState = {
   errors: {},
 };
 
-export function getCreateResourceFormFields(formData: FormData): CreateResourceFormFields {
+export function createResourceFormState(
+  fields: Partial<ResourceFormFields> = {}
+): ResourceFormState {
+  return {
+    fields: {
+      ...initialResourceFormState.fields,
+      ...fields,
+    },
+    errors: {},
+  };
+}
+
+export function getResourceFormFields(formData: FormData): ResourceFormFields {
   return {
     title: getString(formData, 'title'),
     url: getString(formData, 'url'),
@@ -80,7 +94,7 @@ export function getCreateResourceFormFields(formData: FormData): CreateResourceF
   };
 }
 
-export function getCreateResourceFieldErrors(error: z.ZodError<CreateResourceInput>) {
+export function getResourceFieldErrors(error: z.ZodError<ResourceFormInput>) {
   const flattened = error.flatten().fieldErrors;
 
   return {

@@ -11,39 +11,39 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import {
-  createResourceSchema,
-  getCreateResourceFieldErrors,
-  getCreateResourceFormFields,
-  initialCreateResourceFormState,
-  type CreateResourceFormState,
+  getResourceFieldErrors,
+  getResourceFormFields,
+  initialResourceFormState,
+  resourceFormSchema,
+  type ResourceFormState,
 } from '@/lib/resource-form';
 
 export async function createResource(
-  _prevState: CreateResourceFormState,
-  formData: FormData,
-): Promise<CreateResourceFormState> {
+  _prevState: ResourceFormState,
+  formData: FormData
+): Promise<ResourceFormState> {
   const session = await auth();
 
   if (!session?.user?.id) {
     return {
-      ...initialCreateResourceFormState,
+      ...initialResourceFormState,
       errors: {
         form: 'ログイン状態を確認できませんでした。再度ログインしてください。',
       },
     };
   }
 
-  const fields = getCreateResourceFormFields(formData);
+  const fields = getResourceFormFields(formData);
 
-  const parsed = createResourceSchema.safeParse(fields);
+  const parsed = resourceFormSchema.safeParse(fields);
 
   if (!parsed.success) {
     return {
       fields: {
-        ...initialCreateResourceFormState.fields,
+        ...initialResourceFormState.fields,
         ...fields,
       },
-      errors: getCreateResourceFieldErrors(parsed.error),
+      errors: getResourceFieldErrors(parsed.error),
     };
   }
 
