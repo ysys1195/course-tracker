@@ -48,6 +48,8 @@ model LearningResource {
   userId            String
   title             String
   url               String
+  provider          String
+  description       String?
   type              ResourceType
   status            LearningResourceStatus   @default(NOT_STARTED)
   priority          LearningResourcePriority @default(MEDIUM)

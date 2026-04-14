@@ -43,8 +43,16 @@ export default async function ResourcesPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.25rem] bg-mist px-4 py-3 text-sm text-ink/68">
-            登録件数: <span className="font-semibold text-ink">{resources.length}</span>
+          <div className="flex flex-col gap-3 sm:items-end">
+            <div className="rounded-[1.25rem] bg-mist px-4 py-3 text-sm text-ink/68">
+              登録件数: <span className="font-semibold text-ink">{resources.length}</span>
+            </div>
+            <Link
+              href="/resources/new"
+              className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+            >
+              教材を追加する
+            </Link>
           </div>
         </div>
       </section>
@@ -54,8 +62,14 @@ export default async function ResourcesPage() {
           <p className="text-sm tracking-[0.18em] text-signal">EMPTY STATE</p>
           <h3 className="mt-4 text-2xl font-semibold">まだ教材が登録されていません</h3>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/70">
-            教材作成機能は後続 issue で追加予定です。作成後はこの画面から種別、ステータス、優先度をまとめて確認できるようになります。
+            最初の教材を登録すると、この画面から種別、ステータス、優先度をまとめて確認できるようになります。
           </p>
+          <Link
+            href="/resources/new"
+            className="mt-6 inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+          >
+            最初の教材を登録する
+          </Link>
         </section>
       ) : (
         <section className="grid gap-4 xl:grid-cols-2">

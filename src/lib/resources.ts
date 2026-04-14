@@ -4,6 +4,18 @@ import type {
   ResourceType,
 } from '@prisma/client';
 
+export const resourceTypeOptions: ReadonlyArray<{
+  value: ResourceType;
+  label: string;
+}> = [
+  { value: 'DOCS', label: '公式 Docs' },
+  { value: 'GITHUB', label: '公式 GitHub' },
+  { value: 'VIDEO', label: '動画' },
+  { value: 'BOOK', label: '書籍' },
+  { value: 'ARTICLE', label: '記事' },
+  { value: 'TUTORIAL', label: 'チュートリアル' },
+];
+
 export const resourceTypeLabels: Record<ResourceType, string> = {
   DOCS: '公式 Docs',
   GITHUB: '公式 GitHub',
@@ -39,6 +51,17 @@ export const resourceStatusMeta: Record<
   },
 };
 
+export const resourceStatusOptions: ReadonlyArray<{
+  value: LearningResourceStatus;
+  label: string;
+}> = [
+  { value: 'NOT_STARTED', label: '未着手' },
+  { value: 'IN_PROGRESS', label: '学習中' },
+  { value: 'COMPLETED', label: '完了' },
+  { value: 'REVIEWING', label: '復習中' },
+  { value: 'ON_HOLD', label: '保留' },
+];
+
 export const resourcePriorityMeta: Record<
   LearningResourcePriority,
   { label: string; className: string }
@@ -56,6 +79,15 @@ export const resourcePriorityMeta: Record<
     className: 'border-fuchsia-200 bg-fuchsia-100 text-fuchsia-700',
   },
 };
+
+export const resourcePriorityOptions: ReadonlyArray<{
+  value: LearningResourcePriority;
+  label: string;
+}> = [
+  { value: 'LOW', label: '低' },
+  { value: 'MEDIUM', label: '中' },
+  { value: 'HIGH', label: '高' },
+];
 
 export function formatUpdatedAt(date: Date): string {
   return new Intl.DateTimeFormat('ja-JP', {

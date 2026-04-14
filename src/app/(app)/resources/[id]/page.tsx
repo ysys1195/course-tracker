@@ -35,6 +35,8 @@ export default async function ResourceDetailPage({
       id: true,
       title: true,
       url: true,
+      provider: true,
+      description: true,
       type: true,
       status: true,
       priority: true,
@@ -77,6 +79,12 @@ export default async function ResourceDetailPage({
           <p className="text-sm text-signal">基本情報</p>
           <dl className="mt-5 grid gap-5 text-sm text-ink/74">
             <div>
+              <dt className="text-ink/46">提供元</dt>
+              <dd className="mt-2 text-base font-medium text-ink">
+                {resource.provider}
+              </dd>
+            </div>
+            <div>
               <dt className="text-ink/46">教材種別</dt>
               <dd className="mt-2 text-base font-medium text-ink">
                 {resourceTypeLabels[resource.type]}
@@ -98,6 +106,12 @@ export default async function ResourceDetailPage({
             <div>
               <dt className="text-ink/46">更新日</dt>
               <dd className="mt-2">{formatUpdatedAt(resource.updatedAt)}</dd>
+            </div>
+            <div>
+              <dt className="text-ink/46">説明</dt>
+              <dd className="mt-2 whitespace-pre-wrap leading-7">
+                {resource.description || '説明はまだ登録されていません。'}
+              </dd>
             </div>
           </dl>
         </article>
