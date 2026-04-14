@@ -9,6 +9,16 @@ export const resourceListSelect = {
   priority: true,
   updatedAt: true,
   url: true,
+  resourceTags: {
+    select: {
+      tag: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
 } satisfies Prisma.LearningResourceSelect;
 
 export const resourceDetailSelect = {
@@ -21,6 +31,16 @@ export const resourceDetailSelect = {
   status: true,
   priority: true,
   updatedAt: true,
+  resourceTags: {
+    select: {
+      tag: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
   notes: {
     orderBy: {
       updatedAt: 'desc',
@@ -70,6 +90,16 @@ export const resourceFormSelect = {
   type: true,
   status: true,
   priority: true,
+  resourceTags: {
+    select: {
+      tag: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
 } satisfies Prisma.LearningResourceSelect;
 
 export type ResourceListItem = Prisma.LearningResourceGetPayload<{
@@ -117,4 +147,20 @@ export async function getResourceFormResourceForUser(
     },
     select: resourceFormSelect,
   });
+}
+
+export async function getAvailableTagsForUser(userId: string) {
+  const tags = await prisma.tag.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      name: 'asc',
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  return tags.map((tag) => tag.name);
 }

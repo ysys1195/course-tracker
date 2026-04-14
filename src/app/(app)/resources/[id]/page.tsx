@@ -4,8 +4,10 @@ import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
 import { ResourceBadges } from '@/components/resource-badges';
 import { ResourceStatusForm } from '@/components/resource-status-form';
+import { ResourceTagList } from '@/components/resource-tag-list';
 import { getResourceDetailForUser } from '@/lib/resource-data';
 import { formatUpdatedAt, resourceTypeLabels } from '@/lib/resources';
+import { getTagNamesFromResourceTags } from '@/lib/resource-tags';
 
 type ResourceDetailPageProps = Readonly<{
   params: Promise<{
@@ -29,6 +31,8 @@ export default async function ResourceDetailPage({
   if (!resource) {
     notFound();
   }
+
+  const tags = getTagNamesFromResourceTags(resource.resourceTags);
 
   return (
     <div className="grid gap-4">
@@ -93,6 +97,12 @@ export default async function ResourceDetailPage({
                 {resource.description || '説明はまだ登録されていません。'}
               </dd>
             </div>
+            <div>
+              <dt className="text-ink/46">タグ</dt>
+              <dd className="mt-3">
+                <ResourceTagList tags={tags} />
+              </dd>
+            </div>
           </dl>
         </article>
 
@@ -139,7 +149,8 @@ export default async function ResourceDetailPage({
 
           {resource.notes.length === 0 ? (
             <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
-              メモはまだ登録されていません。後続 issue でこの画面からメモを管理できるようにします。
+              メモはまだ登録されていません。後続 issue
+              でこの画面からメモを管理できるようにします。
             </p>
           ) : (
             <div className="mt-6 grid gap-4">
@@ -176,7 +187,8 @@ export default async function ResourceDetailPage({
 
           {resource.studyLogs.length === 0 ? (
             <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
-              学習ログはまだ登録されていません。後続 issue でこの教材に対するログ追加機能を実装します。
+              学習ログはまだ登録されていません。後続 issue
+              でこの教材に対するログ追加機能を実装します。
             </p>
           ) : (
             <div className="mt-6 grid gap-4">

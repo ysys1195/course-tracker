@@ -2,13 +2,17 @@ import Link from 'next/link';
 import type { ResourceListItem } from '@/lib/resource-data';
 import { ResourceBadges } from '@/components/resource-badges';
 import { ResourceStatusForm } from '@/components/resource-status-form';
+import { ResourceTagList } from '@/components/resource-tag-list';
 import { formatUpdatedAt, resourceTypeLabels } from '@/lib/resources';
+import { getTagNamesFromResourceTags } from '@/lib/resource-tags';
 
 type ResourceCardProps = {
   resource: ResourceListItem;
 };
 
 export function ResourceCard({ resource }: ResourceCardProps) {
+  const tags = getTagNamesFromResourceTags(resource.resourceTags);
+
   return (
     <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -34,6 +38,11 @@ export function ResourceCard({ resource }: ResourceCardProps) {
 
       <div className="mt-5 flex flex-wrap gap-2">
         <ResourceBadges status={resource.status} priority={resource.priority} />
+      </div>
+
+      <div className="mt-5 grid gap-2">
+        <p className="text-sm font-medium text-ink">タグ</p>
+        <ResourceTagList tags={tags} emptyLabel="タグ未設定" />
       </div>
 
       <div className="mt-5">
