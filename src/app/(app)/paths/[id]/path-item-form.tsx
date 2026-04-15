@@ -27,17 +27,13 @@ export function PathItemForm({
 
   return (
     <section className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-sm tracking-[0.18em] text-signal">ADD RESOURCE</p>
-          <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
-            教材を追加
-          </h2>
-        </div>
-        <p className="max-w-xl text-sm leading-7 text-ink/68">
-          ロードマップの末尾に教材を追加します。並び替えは後続対応として、今回は追加順をそのまま使います。
-        </p>
-      </div>
+      <p className="text-sm tracking-[0.18em] text-signal">ADD RESOURCE</p>
+      <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+        教材を追加
+      </h2>
+      <p className="max-w-xl text-sm leading-7 text-ink/68 pt-4">
+        ロードマップの末尾に教材を追加します。並び替えは後続対応として、今回は追加順をそのまま使います。
+      </p>
 
       <form action={formAction} className="mt-6 grid gap-5">
         <label className="grid gap-2">
