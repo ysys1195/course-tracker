@@ -6,14 +6,17 @@ CourseTracker は、技術学習に使う公式 Docs、公式 GitHub、動画、
 ## 概要
 
 - 学習教材を一つの画面群で整理するための Web アプリです。
-- 現在は、認証基盤、共通レイアウト、主要画面へのナビゲーションまでを実装しています。
-- 将来的に教材一覧、タグ、メモ、学習ログを追加しやすい土台を整えることを目的にしています。
+- 教材一覧、教材詳細、学習メモ、学習ログ、学習ロードマップ、ダッシュボードをユーザー単位で管理できます。
+- 公開用ポートフォリオとして、公式 Docs や公式 GitHub を安全に扱える題材に絞っています。
 
 ## 現在できること
 
 - GitHub OAuth を使ったログイン
 - ログイン済みユーザー向けの保護ページ
-- ダッシュボード、教材一覧、ロードマップ、設定への共通ナビゲーション
+- ダッシュボードでの学習状況の俯瞰
+- 教材の登録、一覧表示、詳細表示、編集
+- タグ、学習メモ、学習ログの記録
+- 学習ロードマップの作成、教材追加、順序管理
 - モバイル幅を考慮した主要導線の表示
 
 ## 技術スタック
@@ -34,6 +37,49 @@ CourseTracker は、技術学習に使う公式 Docs、公式 GitHub、動画、
 - トップページ: 準備中
 - ダッシュボード: 準備中
 - 教材一覧: 準備中
+- 教材詳細: 準備中
+- ロードマップ一覧: 準備中
+- ロードマップ詳細: 準備中
+
+差し替え時の想定ファイル:
+
+- `docs/screenshots/top-page.png`
+- `docs/screenshots/dashboard.png`
+- `docs/screenshots/resources.png`
+- `docs/screenshots/resource-detail.png`
+- `docs/screenshots/paths.png`
+- `docs/screenshots/path-detail.png`
+
+## アーキテクチャ概要
+
+CourseTracker は Next.js App Router を土台にしたフルスタック構成です。画面、認証、Server Actions、Prisma を同一リポジトリ内で閉じ、学習データをユーザー単位で安全に扱うことを優先しています。
+
+```mermaid
+flowchart LR
+    Browser[Browser]
+    App[Next.js App Router]
+    Actions[Server Actions]
+    Auth[Auth.js]
+    Prisma[Prisma Client]
+    DB[(PostgreSQL)]
+
+    Browser --> App
+    App --> Actions
+    App --> Auth
+    Actions --> Auth
+    Actions --> Prisma
+    App --> Prisma
+    Prisma --> DB
+```
+
+構成上の役割:
+
+- `src/app`: App Router の画面、layout、loading、error、not-found
+- `src/components`: 再利用 UI コンポーネント
+- `src/lib`: Prisma 取得ロジック、フォーム schema、表示用メタデータ
+- `src/auth.ts`: Auth.js 設定
+- `prisma/schema.prisma`: データモデル
+- `prisma/seed.mjs`: 公開デモ用 seed
 
 ## ローカルセットアップ
 
@@ -149,7 +195,7 @@ pnpm prisma:seed
 
 ## ER図
 
-現時点の MVP スキーマをもとにした論理 ER 図です。
+現時点のデータモデルをもとにした論理 ER 図です。
 
 ```mermaid
 erDiagram
@@ -210,7 +256,11 @@ erDiagram
       string userId FK
       string title
       string url
+      string provider
+      string description
       ResourceType type
+      LearningResourceStatus status
+      LearningResourcePriority priority
       datetime createdAt
       datetime updatedAt
     }
@@ -276,17 +326,76 @@ erDiagram
 
 - `LearningResource` は中心モデルで、教材 URL はユーザー単位で一意です。
 - `Tag` はユーザー単位で管理し、`ResourceTag` で教材と多対多に紐づきます。
-- `Note` と `StudyLog` は MVP では `LearningResource` に紐づく設計です。
+- `Note` と `StudyLog` は教材詳細画面から直接追加できるよう、`LearningResource` に紐づけています。
 - `LearningPathItem` は `LearningResource` を必須参照し、ロードマップと教材一覧を一貫して扱います。
+
+## 画面遷移図
+
+主要画面の流れを Mermaid で整理しています。公開ポートフォリオとして見せる範囲に絞り、主要導線だけを記載しています。
+
+```mermaid
+flowchart TD
+    Top[トップページ /]
+    Login[ログイン /login]
+    Dashboard[ダッシュボード /dashboard]
+    Resources[教材一覧 /resources]
+    ResourceNew[教材追加 /resources/new]
+    ResourceDetail[教材詳細 /resources/:id]
+    ResourceEdit[教材編集 /resources/:id/edit]
+    Paths[ロードマップ一覧 /paths]
+    PathDetail[ロードマップ詳細 /paths/:id]
+    Settings[設定 /settings]
+
+    Top --> Login
+    Top --> Dashboard
+    Login --> Dashboard
+
+    Dashboard --> Resources
+    Dashboard --> ResourceDetail
+    Dashboard --> Paths
+
+    Resources --> ResourceNew
+    Resources --> ResourceDetail
+
+    ResourceDetail --> ResourceEdit
+    ResourceDetail --> Paths
+
+    Paths --> PathDetail
+    PathDetail --> ResourceDetail
+
+    Dashboard --> Settings
+```
+
+画面ごとの役割:
+
+- `ダッシュボード`: 学習中教材、高優先度教材、今週更新、ステータス集計、種別集計を表示
+- `教材一覧`: 絞り込みと状態更新をしながら教材を探す
+- `教材詳細`: 基本情報、学習状態、メモ、学習ログ、関連ロードマップを集約
+- `ロードマップ一覧`: 学習テーマごとのまとまりを確認し、新規作成する
+- `ロードマップ詳細`: 教材の順序、進捗、追加導線を管理する
+
+## 主要な設計判断
+
+- 認証は `Auth.js + GitHub OAuth` に限定しています。
+  - 公開用ポートフォリオとして導線を絞り、資格情報管理を増やしすぎないためです。
+- 中心モデルを `LearningResource` にしています。
+  - メモ、学習ログ、ロードマップのすべてが教材を起点に拡張できる構造にするためです。
+- URL は `LearningResource` で `userId + url` を一意にしています。
+  - 同じユーザーが同じ教材を重複登録しにくくするためです。
+- 学習ログは `studyMinutes` と `understandingNote` を分離しています。
+  - 後続で集計しやすい数値と、理解メモとして読むテキストを分けるためです。
+- ロードマップ内の順序は `LearningPathItem.position` で保持しています。
+  - ドラッグ&ドロップなしでも、DB 上で明示的に順序管理できるようにするためです。
+- データ取得は `src/lib` に寄せ、画面側では表示に集中させています。
+  - App Router のページや Server Actions の責務を読みやすく保つためです。
 
 ## 今後追加予定の機能
 
-- 教材一覧への実データ表示
-- タグ機能
-- 学習メモ機能
-- 学習ログ機能
-- ロードマップの詳細設計
+- スクリーンショット差し替えと README の仕上げ
+- ダッシュボードの追加集計
+- ロードマップの編集と削除
 - 設定画面の具体化
+- テストの拡充
 
 ## 補足
 
