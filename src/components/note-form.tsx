@@ -34,6 +34,8 @@ export function NoteForm({
   );
   const fieldGapClassName = layout === 'dense' ? 'gap-3' : 'gap-4';
   const textareaRows = compact ? 5 : layout === 'dense' ? 4 : 6;
+  const inputClassName =
+    'rounded-[1.1rem] border border-ink/10 bg-white px-4 py-3 text-sm text-ink outline-none transition placeholder:text-ink/32 focus:border-signal';
 
   return (
     <form action={formAction} className={`grid ${fieldGapClassName}`}>
@@ -42,7 +44,7 @@ export function NoteForm({
         <input
           name="title"
           defaultValue={state.fields.title}
-          className="rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal"
+          className={inputClassName}
           placeholder="例: App Router の気づき"
         />
         {state.errors.title ? (
@@ -56,7 +58,7 @@ export function NoteForm({
           name="content"
           defaultValue={state.fields.content}
           rows={textareaRows}
-          className="rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm leading-7 outline-none transition focus:border-signal"
+          className={`${inputClassName} min-h-32 leading-7`}
           placeholder="教材を読んで分かったこと、あとで見返したいポイントを書きます。"
           required
         />

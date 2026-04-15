@@ -54,13 +54,13 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
 
   if (isEditing) {
     return (
-      <div className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
+      <div className="rounded-[1.4rem] border border-ink/10 bg-mist/40 p-5">
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
           <div>
             <p className="text-sm text-ink/46">
               更新日: {formatUpdatedAt(note.updatedAt)}
             </p>
-            <h4 className="mt-2 text-base font-semibold text-ink">
+            <h4 className="mt-2 text-lg font-semibold text-ink">
               {note.title || 'タイトル未設定のメモ'}
             </h4>
           </div>
@@ -89,13 +89,13 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
   }
 
   return (
-    <div className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
+    <div className="rounded-[1.4rem] border border-ink/10 bg-mist/40 p-5">
       <div className="grid gap-3">
         <div>
           <p className="text-sm text-ink/46">
             更新日: {formatUpdatedAt(note.updatedAt)}
           </p>
-          <h4 className="mt-2 text-base font-semibold text-ink">
+          <h4 className="mt-2 text-lg font-semibold text-ink">
             {note.title || 'タイトル未設定のメモ'}
           </h4>
         </div>
@@ -159,27 +159,29 @@ export function ResourceNotesSection({
   const [isComposerOpen, setIsComposerOpen] = useState(notes.length === 0);
 
   return (
-    <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
+    <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-signal">NOTES</p>
-          <h3 className="mt-2 text-xl font-semibold">学習メモ</h3>
+          <p className="text-sm tracking-[0.18em] text-signal">NOTES</p>
+          <h3 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+            学習メモ
+          </h3>
         </div>
-        <span className="rounded-full bg-mist px-3 py-1 text-sm text-ink/68">
+        <span className="rounded-full bg-mist px-3 py-1 text-sm font-medium text-ink/68">
           {notes.length}件
         </span>
       </div>
 
       {isComposerOpen ? (
-        <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-white p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <p className="text-sm font-medium text-ink">メモを追加</p>
-            <p className="mt-2 text-sm leading-7 text-ink/68">
+        <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-white p-5 sm:p-6">
+          <div className="border-b border-ink/8 pb-4">
+            <p className="text-sm font-semibold text-ink">メモを追加</p>
+            <p className="text-sm leading-7 text-ink/68">
               教材を読んで気づいたことや、あとで見返したいポイントを残せます。
             </p>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-5">
             <NoteForm
               action={createNote.bind(null, resourceId)}
               initialState={initialNoteFormState}
@@ -201,9 +203,9 @@ export function ResourceNotesSection({
           </div>
         </div>
       ) : (
-        <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
+        <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-mist/40 p-5">
           <div className="mb-4">
-            <p className="text-sm font-medium text-ink">新しいメモを追加</p>
+            <p className="text-sm font-semibold text-ink">新しいメモを追加</p>
             <p className="mt-2 text-sm leading-7 text-ink/68">
               気づきや復習ポイントを、この教材に紐づくメモとして残せます。
             </p>
@@ -219,7 +221,7 @@ export function ResourceNotesSection({
       )}
 
       {notes.length === 0 ? (
-        <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
+        <p className="mt-5 rounded-[1.15rem] bg-mist px-4 py-3 text-sm leading-7 text-ink/68">
           まだメモはありません。タイトルと本文を入力すると、この教材に紐づく学習メモとして保存されます。
         </p>
       ) : (

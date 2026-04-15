@@ -37,7 +37,7 @@ export default async function ResourceDetailPage({
   const tags = getTagNamesFromResourceTags(resource.resourceTags);
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-5">
       <PageHeader
         eyebrow="RESOURCE DETAIL"
         title={resource.title}
@@ -60,10 +60,26 @@ export default async function ResourceDetailPage({
         }
       />
 
-      <section className="grid gap-4 lg:grid-cols-[1.5fr_0.9fr]">
-        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
-          <p className="text-sm text-signal">基本情報</p>
-          <dl className="mt-5 grid gap-5 text-sm text-ink/74">
+      <section className="grid gap-5 xl:grid-cols-[1.25fr_0.95fr]">
+        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm tracking-[0.18em] text-signal">RESOURCE</p>
+              <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+                基本情報
+              </h2>
+            </div>
+            <Link
+              href={resource.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+            >
+              教材を開く
+            </Link>
+          </div>
+
+          <dl className="mt-6 grid gap-5 text-sm text-ink/74 sm:grid-cols-2">
             <div>
               <dt className="text-ink/46">提供元</dt>
               <dd className="mt-2 text-base font-medium text-ink">
@@ -95,7 +111,7 @@ export default async function ResourceDetailPage({
             </div>
             <div>
               <dt className="text-ink/46">説明</dt>
-              <dd className="mt-2 whitespace-pre-wrap leading-7">
+              <dd className="mt-2 whitespace-pre-wrap leading-7 sm:pr-6">
                 {resource.description || '説明はまだ登録されていません。'}
               </dd>
             </div>
@@ -108,9 +124,13 @@ export default async function ResourceDetailPage({
           </dl>
         </article>
 
-        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
-          <p className="text-sm text-signal">学習状態</p>
-          <div className="mt-5 flex flex-wrap gap-3">
+        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
+          <p className="text-sm tracking-[0.18em] text-signal">STATUS</p>
+          <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+            学習状態
+          </h2>
+
+          <div className="mt-6 flex flex-wrap gap-3">
             <ResourceBadges
               status={resource.status}
               priority={resource.priority}
@@ -118,8 +138,8 @@ export default async function ResourceDetailPage({
             />
           </div>
 
-          <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-white p-4">
-            <p className="text-sm font-medium text-ink">ステータス更新</p>
+          <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-white p-5">
+            <p className="text-sm font-semibold text-ink">ステータス更新</p>
             <p className="mt-2 text-sm leading-7 text-ink/68">
               未着手、学習中、完了、復習中、保留をここから切り替えられます。
             </p>
@@ -131,56 +151,58 @@ export default async function ResourceDetailPage({
             </div>
           </div>
 
-          <div className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
+          <div className="mt-6 rounded-[1.15rem] bg-mist px-4 py-3 text-sm leading-7 text-ink/68">
             この教材に紐づく学習メモ、学習ログ、ロードマップを下のセクションで確認できます。
           </div>
         </article>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[1.15fr_1.15fr_0.9fr]">
+      <section className="grid gap-5">
         <ResourceNotesSection resourceId={resource.id} notes={resource.notes} />
         <ResourceStudyLogsSection
           resourceId={resource.id}
           studyLogs={resource.studyLogs}
         />
-
-        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm text-signal">ROADMAPS</p>
-              <h3 className="mt-2 text-xl font-semibold">関連ロードマップ</h3>
-            </div>
-            <span className="rounded-full bg-mist px-3 py-1 text-sm text-ink/68">
-              {resource.learningPathItems.length}件
-            </span>
-          </div>
-
-          {resource.learningPathItems.length === 0 ? (
-            <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
-              この教材はまだロードマップに含まれていません。
-            </p>
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {resource.learningPathItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4"
-                >
-                  <p className="text-sm text-ink/46">
-                    STEP {String(item.position).padStart(2, '0')}
-                  </p>
-                  <h4 className="mt-2 text-base font-semibold text-ink">
-                    {item.learningPath.title}
-                  </h4>
-                  <p className="mt-2 text-sm text-ink/68">
-                    ステータス: {item.learningPath.status}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </article>
       </section>
+
+      <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-sm tracking-[0.18em] text-signal">ROADMAPS</p>
+            <h3 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+              関連ロードマップ
+            </h3>
+          </div>
+          <span className="rounded-full bg-mist px-3 py-1 text-sm font-medium text-ink/68">
+            {resource.learningPathItems.length}件
+          </span>
+        </div>
+
+        {resource.learningPathItems.length === 0 ? (
+          <p className="mt-5 rounded-[1.15rem] bg-mist px-4 py-3 text-sm leading-7 text-ink/68">
+            この教材はまだロードマップに含まれていません。
+          </p>
+        ) : (
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            {resource.learningPathItems.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-[1.4rem] border border-ink/10 bg-mist/40 p-5"
+              >
+                <p className="text-sm text-ink/46">
+                  STEP {String(item.position).padStart(2, '0')}
+                </p>
+                <h4 className="mt-2 text-base font-semibold text-ink">
+                  {item.learningPath.title}
+                </h4>
+                <p className="mt-2 text-sm text-ink/68">
+                  ステータス: {item.learningPath.status}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </article>
     </div>
   );
 }
