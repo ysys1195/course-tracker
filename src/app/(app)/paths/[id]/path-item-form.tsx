@@ -73,6 +73,12 @@ export function PathItemForm({
           ) : null}
         </label>
 
+        {resources.length === 0 ? (
+          <div className="rounded-[1.15rem] bg-mist px-4 py-3 text-sm leading-7 text-ink/68">
+            追加できる教材がありません。教材を新しく登録するか、このロードマップに未追加の教材を用意してください。
+          </div>
+        ) : null}
+
         {state.errors.form ? (
           <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {state.errors.form}

@@ -72,9 +72,27 @@ export async function createStudyLog(
     understandingNote: parsed.data.understandingNote,
   } satisfies Prisma.StudyLogUncheckedCreateInput;
 
-  await prisma.studyLog.create({
-    data,
-  });
+  try {
+    await prisma.studyLog.create({
+      data,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        fields,
+        errors: {
+          form: '学習ログの保存に失敗しました。時間をおいて再度お試しください。',
+        },
+      };
+    }
+
+    return {
+      fields,
+      errors: {
+        form: '学習ログの保存に失敗しました。時間をおいて再度お試しください。',
+      },
+    };
+  }
 
   revalidatePath(getResourceDetailPath(resourceId));
 

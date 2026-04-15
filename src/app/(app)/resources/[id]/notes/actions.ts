@@ -1,5 +1,6 @@
 'use server';
 
+import { Prisma } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
@@ -71,14 +72,32 @@ export async function createNote(
     };
   }
 
-  await prisma.note.create({
-    data: {
-      userId,
-      resourceId,
-      title: parsed.data.title || null,
-      content: parsed.data.content,
-    },
-  });
+  try {
+    await prisma.note.create({
+      data: {
+        userId,
+        resourceId,
+        title: parsed.data.title || null,
+        content: parsed.data.content,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        fields,
+        errors: {
+          form: 'メモの保存に失敗しました。時間をおいて再度お試しください。',
+        },
+      };
+    }
+
+    return {
+      fields,
+      errors: {
+        form: 'メモの保存に失敗しました。時間をおいて再度お試しください。',
+      },
+    };
+  }
 
   revalidatePath(getResourceDetailPath(resourceId));
 
@@ -113,17 +132,37 @@ export async function updateNote(
     };
   }
 
-  const updated = await prisma.note.updateMany({
-    where: {
-      id: noteId,
-      resourceId,
-      userId,
-    },
-    data: {
-      title: parsed.data.title || null,
-      content: parsed.data.content,
-    },
-  });
+  let updated;
+
+  try {
+    updated = await prisma.note.updateMany({
+      where: {
+        id: noteId,
+        resourceId,
+        userId,
+      },
+      data: {
+        title: parsed.data.title || null,
+        content: parsed.data.content,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        fields,
+        errors: {
+          form: 'メモの更新に失敗しました。時間をおいて再度お試しください。',
+        },
+      };
+    }
+
+    return {
+      fields,
+      errors: {
+        form: 'メモの更新に失敗しました。時間をおいて再度お試しください。',
+      },
+    };
+  }
 
   if (updated.count === 0) {
     return {

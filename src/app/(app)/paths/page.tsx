@@ -49,6 +49,8 @@ export default async function PathsPage() {
         <ResourceEmptyState
           title="ロードマップはまだありません"
           description="学習テーマごとに教材をまとめると、次に何を見るかとどこまで進んだかを整理できます。まずは1つ作成してみてください。"
+          ctaLabel="教材一覧から候補を確認する"
+          ctaHref="/resources"
         />
       ) : (
         <section className="grid gap-4 lg:grid-cols-2">
