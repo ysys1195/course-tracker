@@ -193,7 +193,12 @@ export default async function ResourceDetailPage({
                   STEP {String(item.position).padStart(2, '0')}
                 </p>
                 <h4 className="mt-2 text-base font-semibold text-ink">
-                  {item.learningPath.title}
+                  <Link
+                    href={`/paths/${item.learningPath.id}`}
+                    className="hover:text-signal"
+                  >
+                    {item.learningPath.title}
+                  </Link>
                 </h4>
                 <p className="mt-2 text-sm text-ink/68">
                   ステータス: {item.learningPath.status}
