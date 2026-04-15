@@ -16,6 +16,7 @@ type NoteFormProps = {
   pendingLabel: string;
   actions?: ReactNode;
   compact?: boolean;
+  layout?: 'default' | 'dense';
 };
 
 export function NoteForm({
@@ -25,14 +26,17 @@ export function NoteForm({
   pendingLabel,
   actions,
   compact = false,
+  layout = 'default',
 }: NoteFormProps) {
   const [state, formAction, pending] = useActionState<NoteFormState, FormData>(
     action,
-    initialState,
+    initialState
   );
+  const fieldGapClassName = layout === 'dense' ? 'gap-3' : 'gap-4';
+  const textareaRows = compact ? 5 : layout === 'dense' ? 4 : 6;
 
   return (
-    <form action={formAction} className="grid gap-4">
+    <form action={formAction} className={`grid ${fieldGapClassName}`}>
       <label className="grid gap-2">
         <span className="text-sm font-medium text-ink">タイトル</span>
         <input
@@ -51,7 +55,7 @@ export function NoteForm({
         <textarea
           name="content"
           defaultValue={state.fields.content}
-          rows={compact ? 5 : 6}
+          rows={textareaRows}
           className="rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm leading-7 outline-none transition focus:border-signal"
           placeholder="教材を読んで分かったこと、あとで見返したいポイントを書きます。"
           required

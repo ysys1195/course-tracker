@@ -55,9 +55,16 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
   if (isEditing) {
     return (
       <div className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
-        <p className="text-sm text-ink/46">
-          更新日: {formatUpdatedAt(note.updatedAt)}
-        </p>
+        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+          <div>
+            <p className="text-sm text-ink/46">
+              更新日: {formatUpdatedAt(note.updatedAt)}
+            </p>
+            <h4 className="mt-2 text-base font-semibold text-ink">
+              {note.title || 'タイトル未設定のメモ'}
+            </h4>
+          </div>
+        </div>
         <div className="mt-4">
           <NoteForm
             action={updateNote.bind(null, resourceId, note.id)}
@@ -65,6 +72,7 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
             submitLabel="メモを更新"
             pendingLabel="更新中..."
             compact
+            layout="dense"
             actions={
               <button
                 type="button"
@@ -82,7 +90,7 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
 
   return (
     <div className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
         <div>
           <p className="text-sm text-ink/46">
             更新日: {formatUpdatedAt(note.updatedAt)}
@@ -92,7 +100,7 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
           </h4>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-start gap-2 sm:justify-end">
           <button
             type="button"
             onClick={() => {
@@ -148,6 +156,8 @@ export function ResourceNotesSection({
   resourceId,
   notes,
 }: ResourceNotesSectionProps) {
+  const [isComposerOpen, setIsComposerOpen] = useState(notes.length === 0);
+
   return (
     <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
       <div className="flex items-center justify-between gap-3">
@@ -160,20 +170,65 @@ export function ResourceNotesSection({
         </span>
       </div>
 
-      <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-white p-4">
-        <p className="text-sm font-medium text-ink">メモを追加</p>
-        <p className="mt-2 text-sm leading-7 text-ink/68">
-          教材を読んで気づいたことや、あとで見返したいポイントを残せます。
-        </p>
-        <div className="mt-4">
-          <NoteForm
-            action={createNote.bind(null, resourceId)}
-            initialState={initialNoteFormState}
-            submitLabel="メモを保存"
-            pendingLabel="保存中..."
-          />
+      {isComposerOpen ? (
+        <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-white p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-ink">メモを追加</p>
+              <p className="mt-2 text-sm leading-7 text-ink/68">
+                教材を読んで気づいたことや、あとで見返したいポイントを残せます。
+              </p>
+            </div>
+
+            {notes.length > 0 ? (
+              <button
+                type="button"
+                onClick={() => setIsComposerOpen(false)}
+                className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+              >
+                閉じる
+              </button>
+            ) : null}
+          </div>
+
+          <div className="mt-4">
+            <NoteForm
+              action={createNote.bind(null, resourceId)}
+              initialState={initialNoteFormState}
+              submitLabel="メモを保存"
+              pendingLabel="保存中..."
+              layout="dense"
+              actions={
+                notes.length > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsComposerOpen(false)}
+                    className="inline-flex items-center justify-center rounded-full border border-ink/12 px-5 py-3 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+                  >
+                    キャンセル
+                  </button>
+                ) : undefined
+              }
+            />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
+          <div className="mb-4">
+            <p className="text-sm font-medium text-ink">新しいメモを追加</p>
+            <p className="mt-2 text-sm leading-7 text-ink/68">
+              気づきや復習ポイントを、この教材に紐づくメモとして残せます。
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsComposerOpen(true)}
+            className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+          >
+            メモを追加
+          </button>
+        </div>
+      )}
 
       {notes.length === 0 ? (
         <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
