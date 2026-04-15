@@ -34,6 +34,23 @@ CourseTracker は、技術学習に使う公式 Docs、公式 GitHub、動画、
 - ローカル DB: Docker Compose
 - パッケージマネージャー: pnpm
 
+## CI/CD
+
+- CI: GitHub Actions
+  - `pull_request` と `main` への `push` で `pnpm lint` と `pnpm build` を実行
+- CD: Vercel の Git 連携
+  - `main` への反映で Production を自動デプロイ
+  - Pull Request ごとに Preview Deploy を利用
+- DB migration:
+  - 本番では `pnpm prisma:migrate:deploy` を手動実行
+  - schema 変更時の DB 反映を明示的に管理する
+
+無料枠での運用方針:
+
+- 重い E2E や自前 runner は入れず、`lint/build` を最小 CI とする
+- デプロイは Vercel に任せ、アプリ本体の検証を GitHub Actions で担保する
+- `main` は Branch Protection で `CI` 成功後のみマージできるように設定する
+
 ## スクリーンショット
 
 スクリーンショットは今後差し替え予定です。配置先のプレースホルダーとして [docs/screenshots/README.md](docs/screenshots/README.md) を用意しています。
@@ -188,6 +205,8 @@ pnpm prisma:generate
 pnpm prisma:migrate
 pnpm prisma:seed
 ```
+
+GitHub Actions では `.github/workflows/ci.yml` を使って `lint/build` を自動実行します。
 
 ## ディレクトリの要点
 
