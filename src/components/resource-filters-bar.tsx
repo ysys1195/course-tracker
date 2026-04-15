@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ResourceFiltersResetButton } from '@/components/resource-filters-reset-button';
 import type { ResourceListFilters } from '@/lib/resources';
 import {
   resourcePriorityOptions,
@@ -128,12 +129,7 @@ export function ResourceFiltersBar({
             >
               条件を適用
             </button>
-            <Link
-              href="/resources"
-              className="inline-flex items-center justify-center rounded-full border border-ink/12 px-5 py-3 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
-            >
-              クリア
-            </Link>
+            <ResourceFiltersResetButton />
           </div>
         </div>
       </form>
