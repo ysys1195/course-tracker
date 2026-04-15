@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import type { ResourceListFilters } from '@/lib/resources';
 
 export const resourceListSelect = {
   id: true,
@@ -114,14 +115,56 @@ export type ResourceFormResource = Prisma.LearningResourceGetPayload<{
   select: typeof resourceFormSelect;
 }>;
 
-export async function getResourcesForUser(userId: string) {
+function buildResourceOrderBy(sort: ResourceListFilters['sort']) {
+  switch (sort) {
+    case 'updatedAt_asc':
+      return [{ updatedAt: 'asc' }] satisfies Prisma.LearningResourceOrderByWithRelationInput[];
+    case 'priority_desc':
+      return [
+        { priority: 'desc' },
+        { updatedAt: 'desc' },
+      ] satisfies Prisma.LearningResourceOrderByWithRelationInput[];
+    case 'priority_asc':
+      return [
+        { priority: 'asc' },
+        { updatedAt: 'desc' },
+      ] satisfies Prisma.LearningResourceOrderByWithRelationInput[];
+    case 'updatedAt_desc':
+    default:
+      return [{ updatedAt: 'desc' }] satisfies Prisma.LearningResourceOrderByWithRelationInput[];
+  }
+}
+
+export async function getResourcesForUser(
+  userId: string,
+  filters: ResourceListFilters,
+) {
+  const where: Prisma.LearningResourceWhereInput = {
+    userId,
+  };
+
+  if (filters.q) {
+    where.title = {
+      contains: filters.q,
+      mode: 'insensitive',
+    };
+  }
+
+  if (filters.type) {
+    where.type = filters.type;
+  }
+
+  if (filters.status) {
+    where.status = filters.status;
+  }
+
+  if (filters.priority) {
+    where.priority = filters.priority;
+  }
+
   return prisma.learningResource.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      updatedAt: 'desc',
-    },
+    where,
+    orderBy: buildResourceOrderBy(filters.sort),
     select: resourceListSelect,
   });
 }

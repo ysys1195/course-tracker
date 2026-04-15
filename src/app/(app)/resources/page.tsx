@@ -1,45 +1,57 @@
-import Link from 'next/link';
 import { auth } from '@/auth';
+import { ActiveResourceFilters } from '@/components/active-resource-filters';
 import { PageHeader } from '@/components/page-header';
 import { ResourceCard } from '@/components/resource-card';
 import { ResourceEmptyState } from '@/components/resource-empty-state';
+import { ResourceFiltersBar } from '@/components/resource-filters-bar';
 import { getResourcesForUser } from '@/lib/resource-data';
+import {
+  getActiveResourceFilterChips,
+  parseResourceListFilters,
+  type ResourceListSearchParams,
+} from '@/lib/resources';
 
-export default async function ResourcesPage() {
+type ResourcesPageProps = Readonly<{
+  searchParams?: Promise<ResourceListSearchParams>;
+}>;
+
+export default async function ResourcesPage({ searchParams }: ResourcesPageProps) {
   const session = await auth();
+  const filters = parseResourceListFilters(await searchParams);
+  const activeFilters = getActiveResourceFilterChips(filters);
 
   const resources = session?.user?.id
-    ? await getResourcesForUser(session.user.id)
+    ? await getResourcesForUser(session.user.id, filters)
     : [];
+  const hasAnyFilters = activeFilters.length > 0;
 
   return (
     <div className="grid gap-4">
       <PageHeader
         eyebrow="RESOURCES"
         title="教材一覧"
-        description="公式 Docs、GitHub、動画、書籍、記事をユーザー単位で管理する中心画面です。今回は一覧表示、視認しやすい状態表示、詳細導線までを整えています。"
-        actions={
-          <>
-            <div className="rounded-[1.25rem] bg-mist px-4 py-3 text-sm text-ink/68">
-              登録件数:{' '}
-              <span className="font-semibold text-ink">{resources.length}</span>
-            </div>
-            <Link
-              href="/resources/new"
-              className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439]"
-            >
-              教材を追加する
-            </Link>
-          </>
-        }
+        description="タイトル検索、種別、ステータス、優先度、並び順を組み合わせて、学習リソースを探しやすく整理できます。"
       />
 
+      <ResourceFiltersBar filters={filters} resultCount={resources.length} />
+
+      <ActiveResourceFilters filters={activeFilters} clearHref="/resources" />
+
       {resources.length === 0 ? (
-        <ResourceEmptyState
-          title="まだ教材が登録されていません"
-          description="最初の教材を登録すると、この画面から種別、ステータス、優先度をまとめて確認できるようになります。"
-          ctaLabel="最初の教材を登録する"
-        />
+        hasAnyFilters ? (
+          <ResourceEmptyState
+            title="条件に一致する教材がありません"
+            description="検索語や絞り込み条件を見直すと、別の教材が見つかる可能性があります。現在の条件は上のチップから確認できます。"
+            ctaLabel="条件をクリアする"
+            ctaHref="/resources"
+          />
+        ) : (
+          <ResourceEmptyState
+            title="まだ教材が登録されていません"
+            description="最初の教材を登録すると、この画面から種別、ステータス、優先度をまとめて確認できるようになります。"
+            ctaLabel="最初の教材を登録する"
+          />
+        )
       ) : (
         <section className="grid gap-4 xl:grid-cols-2">
           {resources.map((resource) => (
