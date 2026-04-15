@@ -90,7 +90,7 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
 
   return (
     <div className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4">
-      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+      <div className="grid gap-3">
         <div>
           <p className="text-sm text-ink/46">
             更新日: {formatUpdatedAt(note.updatedAt)}
@@ -99,31 +99,31 @@ function ResourceNoteCard({ resourceId, note }: ResourceNoteCardProps) {
             {note.title || 'タイトル未設定のメモ'}
           </h4>
         </div>
-
-        <div className="flex flex-wrap justify-start gap-2 sm:justify-end">
-          <button
-            type="button"
-            onClick={() => {
-              setIsDeleteConfirming(false);
-              setIsEditing(true);
-            }}
-            className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
-          >
-            編集
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsDeleteConfirming((current) => !current)}
-            className="inline-flex items-center justify-center rounded-full border border-rose-200 px-4 py-2 text-sm text-rose-700 transition hover:bg-rose-50"
-          >
-            削除
-          </button>
-        </div>
       </div>
 
       <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-ink/72">
         {note.content}
       </p>
+
+      <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-ink/10 pt-4">
+        <button
+          type="button"
+          onClick={() => {
+            setIsDeleteConfirming(false);
+            setIsEditing(true);
+          }}
+          className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+        >
+          編集
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsDeleteConfirming((current) => !current)}
+          className="inline-flex items-center justify-center rounded-full border border-rose-200 px-4 py-2 text-sm text-rose-700 transition hover:bg-rose-50"
+        >
+          削除
+        </button>
+      </div>
 
       {isDeleteConfirming ? (
         <div className="mt-4 rounded-[1.25rem] border border-rose-200 bg-rose-50 p-4">
@@ -173,22 +173,10 @@ export function ResourceNotesSection({
       {isComposerOpen ? (
         <div className="mt-6 rounded-[1.25rem] border border-ink/10 bg-white p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-sm font-medium text-ink">メモを追加</p>
-              <p className="mt-2 text-sm leading-7 text-ink/68">
-                教材を読んで気づいたことや、あとで見返したいポイントを残せます。
-              </p>
-            </div>
-
-            {notes.length > 0 ? (
-              <button
-                type="button"
-                onClick={() => setIsComposerOpen(false)}
-                className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
-              >
-                閉じる
-              </button>
-            ) : null}
+            <p className="text-sm font-medium text-ink">メモを追加</p>
+            <p className="mt-2 text-sm leading-7 text-ink/68">
+              教材を読んで気づいたことや、あとで見返したいポイントを残せます。
+            </p>
           </div>
 
           <div className="mt-4">
