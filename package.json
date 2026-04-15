@@ -14,7 +14,8 @@
     "db:check": "docker compose exec db pg_isready -U ${POSTGRES_USER:-course_tracker} -d ${POSTGRES_DB:-course_tracker}",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "prisma db seed"
   },
   "dependencies": {
     "@auth/prisma-adapter": "2.10.0",

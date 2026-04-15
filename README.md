@@ -97,6 +97,35 @@ pnpm dev
 
 起動後は `http://localhost:3000` を開いて動作を確認します。
 
+### 6. 公開用 seed データを投入
+
+公開デモ用の安全な教材データを投入できます。内容は公式 Docs と公式 GitHub のみで、個人情報に関する情報は含みません。
+
+```bash
+pnpm prisma:seed
+```
+
+デフォルトでは `demo@coursetracker.local` という公開用デモユーザーに対して、教材、タグ、メモ、学習ログ、ロードマップを投入します。
+
+ローカルで GitHub ログインした自分のユーザーにサンプルデータを入れたい場合は、ログインに使っているメールアドレスを指定して実行します。
+
+```bash
+SEED_USER_EMAIL=your-github-email@example.com pnpm prisma:seed
+```
+
+必要に応じて表示名も変えられます。
+
+```bash
+SEED_USER_EMAIL=your-github-email@example.com SEED_USER_NAME="Local Demo User" pnpm prisma:seed
+```
+
+seed の内容:
+
+- 公式 Docs / 公式 GitHub を中心にしたサンプル教材
+- タグ、学習メモ、学習ログ
+- 進捗が見える 2 本の学習ロードマップ
+- ダッシュボード、教材一覧、教材詳細、ロードマップ一覧・詳細が成立する状態
+
 ## 開発コマンド
 
 ```bash
@@ -107,6 +136,7 @@ pnpm db:up
 pnpm db:down
 pnpm prisma:generate
 pnpm prisma:migrate
+pnpm prisma:seed
 ```
 
 ## ディレクトリの要点
@@ -214,7 +244,8 @@ erDiagram
       string userId FK
       string resourceId FK
       StudyLogType type
-      string content
+      int studyMinutes
+      string understandingNote
       datetime studiedAt
       datetime createdAt
       datetime updatedAt
@@ -259,5 +290,5 @@ erDiagram
 
 ## 補足
 
-- 本リポジトリは公開用ポートフォリオを前提にしているため、個人情報や実際の転職活動データは扱いません。
+- 本リポジトリは公開用ポートフォリオを前提にしているため、個人情報は扱いません。
 - 本番デプロイ、詳細設計図、完成版スクリーンショットは今後追加予定です。
