@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
 import { ResourceBadges } from '@/components/resource-badges';
+import { ResourceNotesSection } from '@/components/resource-notes-section';
 import { ResourceStatusForm } from '@/components/resource-status-form';
 import { ResourceTagList } from '@/components/resource-tag-list';
 import { getResourceDetailForUser } from '@/lib/resource-data';
@@ -136,43 +137,7 @@ export default async function ResourceDetailPage({
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[1.15fr_1.15fr_0.9fr]">
-        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm text-signal">NOTES</p>
-              <h3 className="mt-2 text-xl font-semibold">学習メモ</h3>
-            </div>
-            <span className="rounded-full bg-mist px-3 py-1 text-sm text-ink/68">
-              {resource.notes.length}件
-            </span>
-          </div>
-
-          {resource.notes.length === 0 ? (
-            <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
-              メモはまだ登録されていません。後続 issue
-              でこの画面からメモを管理できるようにします。
-            </p>
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {resource.notes.map((note) => (
-                <div
-                  key={note.id}
-                  className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4"
-                >
-                  <p className="text-sm text-ink/46">
-                    更新日: {formatUpdatedAt(note.updatedAt)}
-                  </p>
-                  <h4 className="mt-2 text-base font-semibold text-ink">
-                    {note.title || 'タイトル未設定のメモ'}
-                  </h4>
-                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-ink/72">
-                    {note.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </article>
+        <ResourceNotesSection resourceId={resource.id} notes={resource.notes} />
 
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
           <div className="flex items-center justify-between gap-3">
