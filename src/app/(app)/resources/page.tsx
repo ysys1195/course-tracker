@@ -42,8 +42,6 @@ export default async function ResourcesPage({ searchParams }: ResourcesPageProps
           <ResourceEmptyState
             title="条件に一致する教材がありません"
             description="検索語や絞り込み条件を見直すと、別の教材が見つかる可能性があります。現在の条件は上のチップから確認できます。"
-            ctaLabel="条件をクリアする"
-            ctaHref="/resources"
           />
         ) : (
           <ResourceEmptyState

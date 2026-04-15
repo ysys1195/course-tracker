@@ -3,7 +3,7 @@ import Link from 'next/link';
 type ResourceEmptyStateProps = {
   title: string;
   description: string;
-  ctaLabel: string;
+  ctaLabel?: string;
   ctaHref?: string;
 };
 
@@ -20,12 +20,14 @@ export function ResourceEmptyState({
       <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/70">
         {description}
       </p>
-      <Link
-        href={ctaHref}
-        className="mt-6 inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439]"
-      >
-        {ctaLabel}
-      </Link>
+      {ctaLabel ? (
+        <Link
+          href={ctaHref}
+          className="mt-6 inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+        >
+          {ctaLabel}
+        </Link>
+      ) : null}
     </section>
   );
 }
