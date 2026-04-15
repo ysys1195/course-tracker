@@ -160,7 +160,7 @@ export function ResourceNotesSection({
 
   return (
     <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm tracking-[0.18em] text-signal">NOTES</p>
           <h3 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
@@ -174,9 +174,9 @@ export function ResourceNotesSection({
 
       {isComposerOpen ? (
         <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-white p-5 sm:p-6">
-          <div className="border-b border-ink/8 pb-4">
+          <div className="flex flex-col gap-2 border-b border-ink/8 pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
             <p className="text-sm font-semibold text-ink">メモを追加</p>
-            <p className="text-sm leading-7 text-ink/68">
+            <p className="max-w-xl text-sm leading-6 text-ink/68 sm:text-right sm:leading-7">
               教材を読んで気づいたことや、あとで見返したいポイントを残せます。
             </p>
           </div>
@@ -213,7 +213,7 @@ export function ResourceNotesSection({
           <button
             type="button"
             onClick={() => setIsComposerOpen(true)}
-            className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+            className="inline-flex w-full items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439] sm:w-auto"
           >
             メモを追加
           </button>

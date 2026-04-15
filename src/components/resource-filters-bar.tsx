@@ -25,19 +25,19 @@ export function ResourceFiltersBar({
           <h3 className="mt-3 text-xl font-semibold tracking-tight text-ink">
             検索・絞り込み
           </h3>
-          <p className="mt-2 text-sm leading-7 text-ink/70">
-            タイトル、種別、ステータス、優先度、並び順を組み合わせて教材を探せます。
+          <p className="mt-2 text-sm leading-6 text-ink/70 sm:leading-7">
+            タイトルと条件を組み合わせて、今見る教材を絞り込めます。
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="rounded-full bg-mist px-4 py-2 text-sm text-ink/70">
             表示件数:{' '}
             <span className="font-semibold text-ink">{resultCount}</span>
           </div>
           <Link
             href="/resources/new"
-            className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+            className="inline-flex w-full items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439] sm:w-auto"
           >
             教材を追加する
           </Link>
@@ -45,7 +45,7 @@ export function ResourceFiltersBar({
       </div>
 
       <form method="get" className="mt-6 grid gap-4">
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(18rem,1fr)]">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.8fr)_minmax(16rem,1fr)]">
           <label className="grid gap-2 text-sm text-ink/72">
             <span className="font-medium text-ink">タイトル検索</span>
             <input
@@ -125,7 +125,7 @@ export function ResourceFiltersBar({
           <div className="grid gap-3 self-end sm:grid-cols-2 xl:min-w-[14rem] xl:grid-cols-1">
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+              className="inline-flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439]"
             >
               条件を適用
             </button>

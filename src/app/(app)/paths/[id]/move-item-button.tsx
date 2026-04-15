@@ -18,7 +18,7 @@ export function MoveItemButton({
     <button
       type="submit"
       disabled={disabled || pending}
-      className="inline-flex items-center justify-center rounded-full border border-ink/12 bg-white px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex w-full items-center justify-center rounded-full border border-ink/12 bg-white px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
     >
       {pending ? '更新中...' : label}
     </button>

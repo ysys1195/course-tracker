@@ -18,19 +18,19 @@ function FocusResourceCard({
 }) {
   return (
     <article className="rounded-[1.5rem] border border-ink/10 bg-white p-5 shadow-soft">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm tracking-[0.12em] text-signal">
             {resourceTypeLabels[resource.type]}
           </p>
-          <h3 className="mt-3 text-xl font-semibold tracking-tight text-ink">
+          <h3 className="mt-3 text-lg font-semibold tracking-tight text-ink sm:text-xl">
             {resource.title}
           </h3>
           <p className="mt-2 text-sm leading-6 text-ink/62">{caption}</p>
         </div>
         <Link
           href={`/resources/${resource.id}`}
-          className="inline-flex shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+          className="inline-flex w-full shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
         >
           詳細
         </Link>
@@ -57,7 +57,7 @@ function FocusResourceCard({
         )}
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-ink/8 pt-4 text-sm text-ink/62">
+      <div className="mt-5 flex flex-col gap-2 border-t border-ink/8 pt-4 text-sm text-ink/62 sm:flex-row sm:items-center sm:justify-between">
         <p>更新日: {formatUpdatedAt(resource.updatedAt)}</p>
         <a
           href={resource.url}
@@ -94,19 +94,19 @@ export default async function DashboardPage() {
       <PageHeader
         eyebrow="DASHBOARD"
         title={`${session.user.name || 'ユーザー'}の学習ワークスペース`}
-        description="学習中の教材、優先度、今週の更新状況をまとめて確認できます。次に見る教材へ迷わず移れるダッシュボードです。"
+        description="学習中の教材、優先度、今週の更新をまとめて確認できます。次に見る教材へすぐ移れるダッシュボードです。"
         variant="hero"
         actions={
           <>
             <Link
               href="/resources"
-              className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-medium text-ink transition hover:bg-white/90"
+              className="inline-flex w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-medium text-ink transition hover:bg-white/90 sm:w-auto"
             >
               教材一覧を見る
             </Link>
             <Link
               href="/resources/new"
-              className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+              className="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10 sm:w-auto"
             >
               教材を追加
             </Link>
@@ -116,10 +116,10 @@ export default async function DashboardPage() {
 
       <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm tracking-[0.18em] text-signal">STATUS</p>
-              <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+              <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
                 ステータス別件数
               </h2>
             </div>
@@ -142,10 +142,10 @@ export default async function DashboardPage() {
         </article>
 
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm tracking-[0.18em] text-signal">TYPES</p>
-              <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+              <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
                 種別別件数
               </h2>
             </div>
@@ -173,12 +173,12 @@ export default async function DashboardPage() {
 
       <section className="grid gap-5 xl:grid-cols-2">
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm tracking-[0.18em] text-signal">
                 IN PROGRESS
               </p>
-              <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+              <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
                 学習中の教材
               </h2>
             </div>
@@ -214,10 +214,10 @@ export default async function DashboardPage() {
         </article>
 
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm tracking-[0.18em] text-signal">NEXT UP</p>
-              <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+              <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
                 優先度が高い教材
               </h2>
             </div>
@@ -254,10 +254,10 @@ export default async function DashboardPage() {
       </section>
 
       <section className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm tracking-[0.18em] text-signal">THIS WEEK</p>
-            <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+            <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
               今週更新した教材とログ
             </h2>
           </div>
@@ -277,18 +277,18 @@ export default async function DashboardPage() {
                 key={`${resource.id}:${resource.activityDate.toISOString()}`}
                 className="rounded-[1.4rem] border border-ink/10 bg-mist/40 p-5"
               >
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
                     <p className="text-sm tracking-[0.12em] text-signal">
                       {resourceTypeLabels[resource.type]}
                     </p>
-                    <h3 className="mt-3 text-xl font-semibold tracking-tight text-ink">
+                    <h3 className="mt-3 text-lg font-semibold tracking-tight text-ink sm:text-xl">
                       {resource.title}
                     </h3>
                   </div>
                   <Link
                     href={`/resources/${resource.id}`}
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-white hover:text-ink"
+                    className="inline-flex w-full shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-white hover:text-ink sm:w-auto"
                   >
                     詳細
                   </Link>

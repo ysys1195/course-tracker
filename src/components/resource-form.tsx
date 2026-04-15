@@ -166,7 +166,7 @@ export function ResourceForm({
         </section>
 
         <section className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid gap-5 lg:grid-cols-3">
             <Field label="教材種別" required error={state.errors.type}>
               <select
                 name="type"
@@ -223,7 +223,7 @@ export function ResourceForm({
             <button
               type="submit"
               disabled={pending}
-              className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {pending ? '保存中...' : submitLabel}
             </button>

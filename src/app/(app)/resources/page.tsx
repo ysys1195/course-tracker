@@ -30,7 +30,7 @@ export default async function ResourcesPage({ searchParams }: ResourcesPageProps
       <PageHeader
         eyebrow="RESOURCES"
         title="教材一覧"
-        description="タイトル検索、種別、ステータス、優先度、並び順を組み合わせて、学習リソースを探しやすく整理できます。"
+        description="検索と絞り込みで、今見る教材を探しやすく整理できます。"
       />
 
       <ResourceFiltersBar filters={filters} resultCount={resources.length} />

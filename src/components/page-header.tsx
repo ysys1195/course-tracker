@@ -17,8 +17,8 @@ export function PageHeader({
 }: PageHeaderProps) {
   const baseClassName =
     variant === 'hero'
-      ? 'rounded-[2rem] bg-[linear-gradient(135deg,_#122023_0%,_#18333a_58%,_#0f766e_100%)] p-8 text-white shadow-soft sm:p-10'
-      : 'rounded-[2rem] border border-ink/10 bg-white p-8 shadow-soft sm:p-10';
+      ? 'rounded-[2rem] bg-[linear-gradient(135deg,_#122023_0%,_#18333a_58%,_#0f766e_100%)] p-6 text-white shadow-soft sm:p-10'
+      : 'rounded-[2rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-10';
 
   const eyebrowClassName =
     variant === 'hero'
@@ -33,14 +33,18 @@ export function PageHeader({
   return (
     <section className={baseClassName}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <p className={eyebrowClassName}>{eyebrow}</p>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-4xl">
             {title}
           </h2>
           <p className={descriptionClassName}>{description}</p>
         </div>
-        {actions ? <div className="flex shrink-0 flex-col gap-3">{actions}</div> : null}
+        {actions ? (
+          <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto">
+            {actions}
+          </div>
+        ) : null}
       </div>
     </section>
   );

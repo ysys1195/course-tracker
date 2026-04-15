@@ -25,13 +25,13 @@ export function ResourceStatusForm({
     initialStatusUpdateState,
   );
   const fieldLayoutClassName = compact
-    ? 'flex flex-col gap-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center'
+    ? 'flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center'
     : 'grid gap-3';
   const selectClassName = compact
     ? 'min-w-0 rounded-full border border-ink/12 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-signal'
     : 'rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal';
   const buttonClassName = compact
-    ? 'inline-flex items-center justify-center rounded-full border border-ink/12 bg-white px-4 py-2.5 text-sm font-medium text-ink transition hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-60'
+    ? 'inline-flex w-full items-center justify-center rounded-full border border-ink/12 bg-white px-4 py-2.5 text-sm font-medium text-ink transition hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-60 lg:w-auto'
     : 'inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-3 text-sm font-medium text-ink transition hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-60';
 
   return (

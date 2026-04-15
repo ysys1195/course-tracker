@@ -27,11 +27,11 @@ export default async function PathsPage() {
       <PageHeader
         eyebrow="PATHS"
         title="学習ロードマップ"
-        description="学習の目的ごとに教材をまとめ、順番と進捗を一目で把握できる画面です。教材単体の管理から一歩進めて、学習の流れを組み立てます。"
+        description="目的ごとに教材をまとめて、学習順と進捗を一目で確認できます。"
         actions={
           <Link
             href="/resources"
-            className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+            className="inline-flex w-full items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
           >
             教材一覧を見る
           </Link>
@@ -63,22 +63,22 @@ export default async function PathsPage() {
                 key={learningPath.id}
                 className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft"
               >
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
                     <p className="text-sm tracking-[0.18em] text-signal">
                       PATH
                     </p>
-                    <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ink">
+                    <h2 className="mt-3 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
                       {learningPath.title}
                     </h2>
-                    <p className="mt-3 text-sm leading-7 text-ink/68">
+                    <p className="mt-3 text-sm leading-6 text-ink/68 sm:leading-7">
                       {learningPath.description ||
                         '説明はまだ登録されていません。'}
                     </p>
                   </div>
                   <Link
                     href={`/paths/${learningPath.id}`}
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+                    className="inline-flex w-full shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
                   >
                     詳細を見る
                   </Link>
@@ -105,7 +105,7 @@ export default async function PathsPage() {
                       style={{ width: `${progress.completionRate}%` }}
                     />
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-3 text-sm text-ink/68">
+                  <div className="mt-3 flex flex-col gap-2 text-sm text-ink/68 sm:flex-row sm:flex-wrap sm:gap-3">
                     <p>完了 {progress.completedCount}件</p>
                     <p>進行中 {progress.inProgressCount}件</p>
                     <p>残り {progress.remainingCount}件</p>

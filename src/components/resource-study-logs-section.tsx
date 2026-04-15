@@ -60,7 +60,7 @@ export function ResourceStudyLogsSection({
 
   return (
     <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm tracking-[0.18em] text-signal">STUDY LOGS</p>
           <h3 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
@@ -73,9 +73,9 @@ export function ResourceStudyLogsSection({
       </div>
 
       <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-white p-5 sm:p-6">
-        <div className="border-b border-ink/8 pb-4">
+        <div className="flex flex-col gap-2 border-b border-ink/8 pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <p className="text-sm font-semibold text-ink">学習ログを追加</p>
-          <p className="text-sm leading-7 text-ink/68">
+          <p className="max-w-xl text-sm leading-6 text-ink/68 sm:text-right sm:leading-7">
             学習日と学習時間、理解度メモを教材に紐づけて残せます。
           </p>
         </div>
@@ -121,7 +121,7 @@ export function ResourceStudyLogsSection({
             </label>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_10.5rem] sm:items-end">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_10.5rem] lg:items-end">
             <label className="grid gap-2">
               <span className="text-sm font-medium text-ink">理解度メモ *</span>
               <textarea
@@ -164,7 +164,7 @@ export function ResourceStudyLogsSection({
               <button
                 type="submit"
                 disabled={pending}
-                className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {pending ? '保存中...' : '学習ログを保存'}
               </button>

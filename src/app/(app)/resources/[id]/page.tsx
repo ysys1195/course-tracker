@@ -41,18 +41,18 @@ export default async function ResourceDetailPage({
       <PageHeader
         eyebrow="RESOURCE DETAIL"
         title={resource.title}
-        description="教材の基本情報、学習状態、メモ、学習ログ、関連ロードマップを一箇所で確認するための詳細画面です。"
+        description="基本情報、学習状態、メモ、学習ログをまとめて確認できます。"
         actions={
           <>
             <Link
               href={`/resources/${resource.id}/edit`}
-              className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439]"
+              className="inline-flex w-full items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1d3439] sm:w-auto"
             >
               編集画面へ
             </Link>
             <Link
               href="/resources"
-              className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+              className="inline-flex w-full items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
             >
               一覧へ戻る
             </Link>
@@ -62,7 +62,7 @@ export default async function ResourceDetailPage({
 
       <section className="grid gap-5 xl:grid-cols-[1.25fr_0.95fr]">
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm tracking-[0.18em] text-signal">RESOURCE</p>
               <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
@@ -73,7 +73,7 @@ export default async function ResourceDetailPage({
               href={resource.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+              className="inline-flex w-full items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
             >
               教材を開く
             </Link>
@@ -166,7 +166,7 @@ export default async function ResourceDetailPage({
       </section>
 
       <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm tracking-[0.18em] text-signal">ROADMAPS</p>
             <h3 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">

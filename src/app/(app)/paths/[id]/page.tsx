@@ -61,12 +61,12 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
           <>
             <Link
               href="/paths"
-              className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+              className="inline-flex w-full items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
             >
               一覧へ戻る
             </Link>
             <span
-              className={`inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-medium ${statusMeta.className}`}
+              className={`inline-flex w-full items-center justify-center rounded-full border px-4 py-2 text-sm font-medium sm:w-auto ${statusMeta.className}`}
             >
               {statusMeta.label}
             </span>
@@ -77,7 +77,7 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
       <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
           <p className="text-sm tracking-[0.18em] text-signal">PROGRESS</p>
-          <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+          <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
             ロードマップ進捗
           </h2>
 
@@ -150,10 +150,10 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
       </section>
 
       <section className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm tracking-[0.18em] text-signal">ITEMS</p>
-            <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
+            <h2 className="mt-2 text-[1.45rem] font-semibold leading-none text-ink sm:text-[1.75rem]">
               教材一覧
             </h2>
           </div>
@@ -188,7 +188,7 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                         {item.resource.title}
                       </h3>
                     </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
+                    <div className="grid shrink-0 gap-2 sm:flex sm:flex-wrap">
                       <form
                         action={moveLearningPathItem.bind(
                           null,
@@ -211,7 +211,7 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                       </form>
                       <Link
                         href={`/resources/${item.resource.id}`}
-                        className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-white hover:text-ink"
+                        className="inline-flex w-full items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-white hover:text-ink sm:w-auto"
                       >
                         教材詳細
                       </Link>
@@ -239,7 +239,7 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                   </div>
 
                   <div className="mt-5 border-t border-ink/8 pt-4 text-sm text-ink/62">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                       <p>更新日: {formatUpdatedAt(item.resource.updatedAt)}</p>
                       <p>並び順はリロード後も保持されます</p>
                     </div>

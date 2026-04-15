@@ -31,7 +31,7 @@ export function PathItemForm({
       <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
         教材を追加
       </h2>
-      <p className="max-w-xl text-sm leading-7 text-ink/68 pt-4">
+      <p className="max-w-xl pt-4 text-sm leading-6 text-ink/68 sm:leading-7">
         教材はロードマップの末尾に追加されます。追加後は一覧の「上へ移動」「下へ移動」で順序を調整できます。
       </p>
 
@@ -89,7 +89,7 @@ export function PathItemForm({
           <button
             type="submit"
             disabled={pending || resources.length === 0}
-            className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {pending ? '追加中...' : '教材を追加'}
           </button>

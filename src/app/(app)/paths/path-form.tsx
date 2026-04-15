@@ -42,7 +42,7 @@ export function LearningPathForm({
           </h2>
         </div>
         <p className="max-w-xl text-sm leading-7 text-ink/68">
-          目的ごとに教材をまとめる箱を作ります。作成後に教材を追加して、学習順と進捗を管理できます。
+          学習テーマごとに教材をまとめる箱を作ります。作成後に教材を追加して順番を整えられます。
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export function LearningPathForm({
           <button
             type="submit"
             disabled={pending}
-            className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1d3439] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {pending ? pendingLabel : submitLabel}
           </button>

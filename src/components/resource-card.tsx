@@ -14,23 +14,23 @@ export function ResourceCard({ resource }: ResourceCardProps) {
   const tags = getTagNamesFromResourceTags(resource.resourceTags);
 
   return (
-    <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
+    <article className="rounded-[1.75rem] border border-ink/10 bg-white p-5 shadow-soft sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm text-signal">
             {resourceTypeLabels[resource.type]}
           </p>
-          <h3 className="mt-3 truncate text-2xl font-semibold tracking-tight">
+          <h3 className="mt-3 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
             {resource.title}
           </h3>
-          <p className="mt-3 break-all text-sm leading-7 text-ink/68">
+          <p className="mt-3 break-all text-sm leading-6 text-ink/68 sm:leading-7">
             {resource.url}
           </p>
         </div>
 
         <Link
           href={`/resources/${resource.id}`}
-          className="inline-flex shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink"
+          className="inline-flex w-full shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-ink/5 hover:text-ink sm:w-auto"
         >
           詳細を見る
         </Link>
