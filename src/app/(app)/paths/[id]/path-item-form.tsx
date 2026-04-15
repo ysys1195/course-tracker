@@ -32,7 +32,7 @@ export function PathItemForm({
         教材を追加
       </h2>
       <p className="max-w-xl text-sm leading-7 text-ink/68 pt-4">
-        ロードマップの末尾に教材を追加します。並び替えは後続対応として、今回は追加順をそのまま使います。
+        教材はロードマップの末尾に追加されます。追加後は一覧の「上へ移動」「下へ移動」で順序を調整できます。
       </p>
 
       <form action={formAction} className="mt-6 grid gap-5">

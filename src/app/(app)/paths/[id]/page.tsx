@@ -4,7 +4,10 @@ import { auth } from '@/auth';
 import { PageHeader } from '@/components/page-header';
 import { ResourceBadges } from '@/components/resource-badges';
 import { ResourceTagList } from '@/components/resource-tag-list';
-import { addResourceToLearningPath } from '@/app/(app)/paths/[id]/actions';
+import {
+  addResourceToLearningPath,
+  moveLearningPathItem,
+} from '@/app/(app)/paths/[id]/actions';
 import {
   getAvailableResourcesForLearningPath,
   getLearningPathDetailForUser,
@@ -15,6 +18,7 @@ import {
 } from '@/lib/path-data';
 import { initialAddPathItemFormState } from '@/lib/path-item-form';
 import { formatUpdatedAt, resourceTypeLabels } from '@/lib/resources';
+import { MoveItemButton } from './move-item-button';
 import { PathItemForm } from './path-item-form';
 
 type PathDetailPageProps = Readonly<{
@@ -166,6 +170,8 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
           <div className="mt-6 grid gap-4">
             {learningPath.items.map((item) => {
               const tags = getPathTagNames(item.resource.resourceTags);
+              const isFirst = item.position === 1;
+              const isLast = item.position === learningPath.items.length;
 
               return (
                 <article
@@ -182,12 +188,34 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                         {item.resource.title}
                       </h3>
                     </div>
-                    <Link
-                      href={`/resources/${item.resource.id}`}
-                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-white hover:text-ink"
-                    >
-                      教材詳細
-                    </Link>
+                    <div className="flex shrink-0 flex-wrap gap-2">
+                      <form
+                        action={moveLearningPathItem.bind(
+                          null,
+                          learningPath.id,
+                          item.id,
+                          'up'
+                        )}
+                      >
+                        <MoveItemButton direction="up" disabled={isFirst} />
+                      </form>
+                      <form
+                        action={moveLearningPathItem.bind(
+                          null,
+                          learningPath.id,
+                          item.id,
+                          'down'
+                        )}
+                      >
+                        <MoveItemButton direction="down" disabled={isLast} />
+                      </form>
+                      <Link
+                        href={`/resources/${item.resource.id}`}
+                        className="inline-flex items-center justify-center rounded-full border border-ink/12 px-4 py-2 text-sm text-ink/72 transition hover:bg-white hover:text-ink"
+                      >
+                        教材詳細
+                      </Link>
+                    </div>
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -211,7 +239,10 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                   </div>
 
                   <div className="mt-5 border-t border-ink/8 pt-4 text-sm text-ink/62">
-                    更新日: {formatUpdatedAt(item.resource.updatedAt)}
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <p>更新日: {formatUpdatedAt(item.resource.updatedAt)}</p>
+                      <p>並び順はリロード後も保持されます</p>
+                    </div>
                   </div>
                 </article>
               );
