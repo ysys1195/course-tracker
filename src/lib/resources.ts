@@ -2,6 +2,7 @@ import type {
   LearningResourcePriority,
   LearningResourceStatus,
   ResourceType,
+  StudyLogType,
 } from '@prisma/client';
 import { z } from 'zod';
 
@@ -114,6 +115,27 @@ export const resourcePriorityOptions: ReadonlyArray<{
 export const resourcePriorityValues = resourcePriorityOptions.map(
   (option) => option.value,
 ) as [LearningResourcePriority, ...LearningResourcePriority[]];
+
+export const studyLogTypeLabels: Record<StudyLogType, string> = {
+  START: '開始',
+  PROGRESS: '進捗',
+  COMPLETE: '完了',
+  REVIEW: '復習',
+};
+
+export const studyLogTypeOptions: ReadonlyArray<{
+  value: StudyLogType;
+  label: string;
+}> = [
+  { value: 'START', label: '開始' },
+  { value: 'PROGRESS', label: '進捗' },
+  { value: 'COMPLETE', label: '完了' },
+  { value: 'REVIEW', label: '復習' },
+];
+
+export const studyLogTypeValues = studyLogTypeOptions.map(
+  (option) => option.value
+) as [StudyLogType, ...StudyLogType[]];
 
 export const resourceSortOptions = [
   { value: 'updatedAt_desc', label: '更新日が新しい順' },

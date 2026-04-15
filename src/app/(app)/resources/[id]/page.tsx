@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/page-header';
 import { ResourceBadges } from '@/components/resource-badges';
 import { ResourceNotesSection } from '@/components/resource-notes-section';
 import { ResourceStatusForm } from '@/components/resource-status-form';
+import { ResourceStudyLogsSection } from '@/components/resource-study-logs-section';
 import { ResourceTagList } from '@/components/resource-tag-list';
 import { getResourceDetailForUser } from '@/lib/resource-data';
 import { formatUpdatedAt, resourceTypeLabels } from '@/lib/resources';
@@ -138,41 +139,10 @@ export default async function ResourceDetailPage({
 
       <section className="grid gap-4 xl:grid-cols-[1.15fr_1.15fr_0.9fr]">
         <ResourceNotesSection resourceId={resource.id} notes={resource.notes} />
-
-        <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm text-signal">STUDY LOGS</p>
-              <h3 className="mt-2 text-xl font-semibold">学習ログ</h3>
-            </div>
-            <span className="rounded-full bg-mist px-3 py-1 text-sm text-ink/68">
-              {resource.studyLogs.length}件
-            </span>
-          </div>
-
-          {resource.studyLogs.length === 0 ? (
-            <p className="mt-6 rounded-[1.25rem] bg-mist p-4 text-sm leading-7 text-ink/68">
-              学習ログはまだ登録されていません。後続 issue
-              でこの教材に対するログ追加機能を実装します。
-            </p>
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {resource.studyLogs.map((log) => (
-                <div
-                  key={log.id}
-                  className="rounded-[1.25rem] border border-ink/10 bg-mist/40 p-4"
-                >
-                  <p className="text-sm text-ink/46">
-                    {formatUpdatedAt(log.studiedAt)} / {log.type}
-                  </p>
-                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-ink/72">
-                    {log.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </article>
+        <ResourceStudyLogsSection
+          resourceId={resource.id}
+          studyLogs={resource.studyLogs}
+        />
 
         <article className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft">
           <div className="flex items-center justify-between gap-3">

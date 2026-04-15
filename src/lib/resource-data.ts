@@ -54,13 +54,12 @@ export const resourceDetailSelect = {
     },
   },
   studyLogs: {
-    orderBy: {
-      studiedAt: 'desc',
-    },
+    orderBy: [{ studiedAt: 'desc' }, { createdAt: 'desc' }],
     select: {
       id: true,
       type: true,
-      content: true,
+      studyMinutes: true,
+      understandingNote: true,
       studiedAt: true,
     },
   },

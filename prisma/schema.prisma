@@ -165,7 +165,8 @@ model StudyLog {
   userId     String
   resourceId String
   type       StudyLogType
-  content    String
+  studyMinutes Int
+  understandingNote String
   studiedAt  DateTime         @default(now())
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
