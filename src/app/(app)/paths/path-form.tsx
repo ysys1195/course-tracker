@@ -12,6 +12,9 @@ type LearningPathFormAction = (
 type LearningPathFormProps = {
   action: LearningPathFormAction;
   initialState: LearningPathFormState;
+  eyebrow: string;
+  title: string;
+  description: string;
   submitLabel: string;
   pendingLabel: string;
 };
@@ -25,6 +28,9 @@ const learningPathStatusOptions = [
 export function LearningPathForm({
   action,
   initialState,
+  eyebrow,
+  title,
+  description,
   submitLabel,
   pendingLabel,
 }: LearningPathFormProps) {
@@ -36,14 +42,12 @@ export function LearningPathForm({
     <section className="rounded-[1.75rem] border border-ink/10 bg-white p-6 shadow-soft sm:p-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm tracking-[0.18em] text-signal">NEW PATH</p>
+          <p className="text-sm tracking-[0.18em] text-signal">{eyebrow}</p>
           <h2 className="mt-2 text-[1.75rem] font-semibold leading-none text-ink">
-            ロードマップを作成
+            {title}
           </h2>
         </div>
-        <p className="max-w-xl text-sm leading-7 text-ink/68">
-          学習テーマごとに教材をまとめる箱を作ります。作成後に教材を追加して順番を整えられます。
-        </p>
+        <p className="max-w-xl text-sm leading-7 text-ink/68">{description}</p>
       </div>
 
       <form action={formAction} className="mt-6 grid gap-5">

@@ -2,6 +2,7 @@
 
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import {
@@ -11,12 +12,79 @@ import {
   addPathItemFormSchema,
   type AddPathItemFormState,
 } from '@/lib/path-item-form';
+import {
+  getLearningPathFieldErrors,
+  getLearningPathFormFields,
+  learningPathFormSchema,
+  type LearningPathFormState,
+} from '@/lib/path-form';
 
 function getPathDetailPath(pathId: string) {
   return `/paths/${pathId}`;
 }
 
+function getLoginRedirectPath(pathId: string) {
+  return `/login?callbackUrl=${encodeURIComponent(getPathDetailPath(pathId))}`;
+}
+
 type MoveDirection = 'up' | 'down';
+
+function revalidateLearningPathPaths(pathId: string) {
+  revalidatePath('/paths');
+  revalidatePath(getPathDetailPath(pathId));
+  revalidatePath(`/paths/${pathId}/edit`);
+}
+
+export async function updateLearningPath(
+  pathId: string,
+  _prevState: LearningPathFormState,
+  formData: FormData
+): Promise<LearningPathFormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      fields: getLearningPathFormFields(formData),
+      errors: {
+        form: 'ログイン状態を確認できませんでした。再度ログインしてください。',
+      },
+    };
+  }
+
+  const fields = getLearningPathFormFields(formData);
+  const parsed = learningPathFormSchema.safeParse(fields);
+
+  if (!parsed.success) {
+    return {
+      fields,
+      errors: getLearningPathFieldErrors(parsed.error),
+    };
+  }
+
+  const updated = await prisma.learningPath.updateMany({
+    where: {
+      id: pathId,
+      userId: session.user.id,
+    },
+    data: {
+      title: parsed.data.title,
+      description: parsed.data.description || null,
+      status: parsed.data.status,
+    },
+  });
+
+  if (updated.count === 0) {
+    return {
+      fields,
+      errors: {
+        form: '操作対象のロードマップを確認できませんでした。',
+      },
+    };
+  }
+
+  revalidateLearningPathPaths(pathId);
+  redirect(getPathDetailPath(pathId));
+}
 
 export async function addResourceToLearningPath(
   pathId: string,
@@ -108,8 +176,7 @@ export async function addResourceToLearningPath(
       };
     }
 
-    revalidatePath('/paths');
-    revalidatePath(getPathDetailPath(pathId));
+    revalidateLearningPathPaths(pathId);
     revalidatePath(`/resources/${result.resourceId}`);
 
     return initialAddPathItemFormState;
@@ -143,7 +210,7 @@ export async function moveLearningPathItem(
   const session = await auth();
 
   if (!session?.user?.id) {
-    return;
+    redirect(getLoginRedirectPath(pathId));
   }
 
   const userId = session.user.id;
@@ -229,10 +296,136 @@ export async function moveLearningPathItem(
     };
   });
 
-  revalidatePath('/paths');
-  revalidatePath(getPathDetailPath(pathId));
+  revalidateLearningPathPaths(pathId);
 
   for (const resourceId of result?.resourceIds ?? []) {
     revalidatePath(`/resources/${resourceId}`);
   }
+}
+
+export async function removeLearningPathItem(pathId: string, itemId: string) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect(getLoginRedirectPath(pathId));
+  }
+
+  const userId = session.user.id;
+  const positionShiftOffset = 1_000_000;
+
+  const result = await prisma.$transaction(async (tx) => {
+    const currentItem = await tx.learningPathItem.findFirst({
+      where: {
+        id: itemId,
+        learningPathId: pathId,
+        learningPath: {
+          userId,
+        },
+      },
+      select: {
+        id: true,
+        position: true,
+        resourceId: true,
+      },
+    });
+
+    if (!currentItem) {
+      return null;
+    }
+
+    await tx.learningPathItem.delete({
+      where: {
+        id: currentItem.id,
+      },
+    });
+
+    await tx.learningPathItem.updateMany({
+      where: {
+        learningPathId: pathId,
+        position: {
+          gt: currentItem.position,
+        },
+      },
+      data: {
+        position: {
+          increment: positionShiftOffset,
+        },
+      },
+    });
+
+    await tx.learningPathItem.updateMany({
+      where: {
+        learningPathId: pathId,
+        position: {
+          gt: currentItem.position,
+        },
+      },
+      data: {
+        position: {
+          decrement: positionShiftOffset + 1,
+        },
+      },
+    });
+
+    return {
+      resourceId: currentItem.resourceId,
+    };
+  });
+
+  revalidateLearningPathPaths(pathId);
+
+  if (result?.resourceId) {
+    revalidatePath(`/resources/${result.resourceId}`);
+  }
+}
+
+export async function deleteLearningPath(pathId: string) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect(getLoginRedirectPath(pathId));
+  }
+
+  const userId = session.user.id;
+
+  const deleted = await prisma.$transaction(async (tx) => {
+    const learningPath = await tx.learningPath.findFirst({
+      where: {
+        id: pathId,
+        userId,
+      },
+      select: {
+        id: true,
+        items: {
+          select: {
+            resourceId: true,
+          },
+        },
+      },
+    });
+
+    if (!learningPath) {
+      return null;
+    }
+
+    await tx.learningPath.delete({
+      where: {
+        id: learningPath.id,
+      },
+    });
+
+    return learningPath.items.map((item) => item.resourceId);
+  });
+
+  if (!deleted) {
+    return;
+  }
+
+  revalidatePath('/paths');
+
+  for (const resourceId of deleted) {
+    revalidatePath(`/resources/${resourceId}`);
+  }
+
+  redirect('/paths');
 }

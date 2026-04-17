@@ -41,6 +41,9 @@ export default async function PathsPage() {
       <LearningPathForm
         action={createLearningPath}
         initialState={initialLearningPathFormState}
+        eyebrow="NEW PATH"
+        title="ロードマップを作成"
+        description="学習テーマごとに教材をまとめる箱を作ります。作成後に教材を追加して順番を整えられます。"
         submitLabel="ロードマップを作成"
         pendingLabel="作成中..."
       />

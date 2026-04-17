@@ -1,6 +1,6 @@
 'use server';
 
-import { type LearningPathStatus, Prisma } from '@prisma/client';
+import { type LearningPathStatus } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
@@ -54,20 +54,7 @@ export async function createLearningPath(
     });
 
     learningPathId = created.id;
-  } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    ) {
-      return {
-        fields,
-        errors: {
-          title:
-            '同じ内容のロードマップがすでに登録されている可能性があります。',
-        },
-      };
-    }
-
+  } catch {
     return {
       fields,
       errors: {
