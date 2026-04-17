@@ -223,36 +223,6 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                       >
                         教材詳細
                       </Link>
-                      <details className="w-full sm:w-auto">
-                        <summary className="inline-flex w-full cursor-pointer items-center justify-center rounded-full border border-rose-200 bg-white px-4 py-2 text-sm text-rose-700 transition hover:bg-rose-50 sm:w-auto">
-                          項目を削除
-                        </summary>
-                        <form
-                          action={removeLearningPathItem.bind(
-                            null,
-                            learningPath.id,
-                            item.id
-                          )}
-                          className="mt-3 grid gap-3 rounded-[1.15rem] border border-rose-200 bg-white p-4"
-                        >
-                          <label className="flex items-start gap-3 text-sm text-ink/72">
-                            <input
-                              type="checkbox"
-                              required
-                              className="mt-1 h-4 w-4 rounded border-ink/20 text-rose-700 focus:ring-rose-600"
-                            />
-                            <span>
-                              この項目だけをロードマップから外し、教材自体は削除されないことを確認しました。
-                            </span>
-                          </label>
-                          <button
-                            type="submit"
-                            className="inline-flex items-center justify-center rounded-full bg-rose-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-800"
-                          >
-                            項目を削除する
-                          </button>
-                        </form>
-                      </details>
                     </div>
                   </div>
 
@@ -275,6 +245,38 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
                       emptyLabel="この教材にはタグがまだ設定されていません。"
                     />
                   </div>
+
+                  <details className="mt-4 rounded-[1.15rem] border border-rose-200 bg-white p-4">
+                    <summary className="cursor-pointer text-sm font-medium text-rose-700">
+                      この項目をロードマップから削除する
+                    </summary>
+
+                    <form
+                      action={removeLearningPathItem.bind(
+                        null,
+                        learningPath.id,
+                        item.id
+                      )}
+                      className="mt-4 grid gap-3"
+                    >
+                      <label className="flex items-start gap-3 text-sm text-ink/72">
+                        <input
+                          type="checkbox"
+                          required
+                          className="mt-1 h-4 w-4 rounded border-ink/20 text-rose-700 focus:ring-rose-600"
+                        />
+                        <span>
+                          この項目だけをロードマップから外し、教材自体は削除されないことを確認しました。
+                        </span>
+                      </label>
+                      <button
+                        type="submit"
+                        className="inline-flex items-center justify-center rounded-full bg-rose-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-800 sm:w-fit"
+                      >
+                        項目を削除する
+                      </button>
+                    </form>
+                  </details>
 
                   <div className="mt-5 border-t border-ink/8 pt-4 text-sm text-ink/62">
                     <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
