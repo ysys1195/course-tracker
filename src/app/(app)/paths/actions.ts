@@ -38,6 +38,8 @@ export async function createLearningPath(
     };
   }
 
+  let learningPathId: string;
+
   try {
     const created = await prisma.learningPath.create({
       data: {
@@ -51,8 +53,7 @@ export async function createLearningPath(
       },
     });
 
-    revalidatePath('/paths');
-    redirect(`/paths/${created.id}`);
+    learningPathId = created.id;
   } catch {
     return {
       fields,
@@ -61,4 +62,7 @@ export async function createLearningPath(
       },
     };
   }
+
+  revalidatePath('/paths');
+  redirect(`/paths/${learningPathId}`);
 }
